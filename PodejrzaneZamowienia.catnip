@@ -1,0 +1,1433 @@
+{
+  "nodes": [
+    {
+      "nodeData": {
+        "codeText": "import glob\nimport os\n\n\nclass ProjectFolders:\n    \u0022\u0022\u0022Folder projektu (ten z plikiem .catnip) i jego podfoldery: input/ na dane, output/ na wyniki.\n\n    Dzia\u0142a tak samo lokalnie i w Dockerze (/app), bo szuka pliku .catnip, a nie \u015Bcie\u017Cki z dysku C:.\n    \u0022\u0022\u0022\n\n    def __init__(self, input_name: str = \u0022input\u0022, output_name: str = \u0022output\u0022):\n        self.root = self.find_root()\n        self.input_dir = os.path.join(self.root, input_name)\n        self.output_dir = os.path.join(self.root, output_name)\n        os.makedirs(self.input_dir, exist_ok=True)\n        os.makedirs(self.output_dir, exist_ok=True)\n\n    def folders(self) -\u003E \u0022ProjectFolders\u0022:\n        return self\n\n    @staticmethod\n    def find_root() -\u003E str:\n        for folder in (os.getcwd(), os.path.dirname(os.path.abspath(__file__))):\n            if glob.glob(os.path.join(folder, \u0022*.catnip\u0022)):\n                return folder\n        return os.getcwd()\n\n    def input_path(self, file_name: str) -\u003E str:\n        return os.path.join(self.input_dir, file_name)\n\n    def output_path(self, file_name: str) -\u003E str:\n        return os.path.join(self.output_dir, file_name)\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "ProjectFolders.md",
+        "nodeCathegory": 3,
+        "id": 41,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 65,
+            "title": "folders",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 65,
+              "title": "folders",
+              "connecttionType": 0
+            }
+          ],
+          "description": "ProjectFolders",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "ProjectFolders",
+        "targetPath": ""
+      },
+      "locationX": 0,
+      "locationY": 0
+    },
+    {
+      "nodeData": {
+        "codeText": "import os\nfrom typing import Dict, Optional\n\nimport pandas as pd\n\n\nclass TableReader:\n    \u0022\u0022\u0022Czyta tabel\u0119 z pliku CSV, JSON (lista rekord\u00F3w) albo Excel do DataFrame.\u0022\u0022\u0022\n\n    FORMATS = {\u0022.csv\u0022: \u0022CSV\u0022, \u0022.json\u0022: \u0022JSON\u0022, \u0022.xlsx\u0022: \u0022Excel\u0022, \u0022.xls\u0022: \u0022Excel\u0022}\n\n    def reader(self) -\u003E \u0022TableReader\u0022:\n        return self\n\n    def format_of(self, path: str) -\u003E str:\n        return self.FORMATS.get(os.path.splitext(path)[1].lower(), \u0022?\u0022)\n\n    def read(self, path: str, dtypes: Optional[Dict[str, str]] = None) -\u003E pd.DataFrame:\n        \u0022\u0022\u0022dtypes: typy kolumn dla du\u017Cych CSV, np. {\u0022customer_id\u0022: \u0022category\u0022} \u2014 oszcz\u0119dza pami\u0119\u0107.\u0022\u0022\u0022\n        kind = self.format_of(path)\n        if kind == \u0022CSV\u0022:\n            return pd.read_csv(path, dtype=dtypes)\n        if kind == \u0022JSON\u0022:\n            return pd.read_json(path, orient=\u0022records\u0022, convert_dates=False)\n        if kind == \u0022Excel\u0022:\n            return pd.read_excel(path)\n        raise ValueError(\u0022Nieobs\u0142ugiwany format pliku: %s\u0022 % path)\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "TableReader.md",
+        "nodeCathegory": 3,
+        "id": 42,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 66,
+            "title": "reader",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 66,
+              "title": "reader",
+              "connecttionType": 0
+            }
+          ],
+          "description": "TableReader",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "TableReader",
+        "targetPath": ""
+      },
+      "locationX": 0,
+      "locationY": 150
+    },
+    {
+      "nodeData": {
+        "codeText": "import time\nfrom typing import Dict, List, Tuple\n\nimport pandas as pd\n\nfrom ColumnProfile import ColumnProfile\nfrom DataScan import DataScan\nfrom PipelineStep import PipelineStep\nfrom TableProfile import TableProfile\n\n\nclass DataScanner:\n    \u0022\u0022\u0022Data Scan: rozpoznaje typy kolumn, klucze i powi\u0105zania mi\u0119dzy plikami \u2014 bez r\u0119cznego opisu danych.\u0022\u0022\u0022\n\n    SAMPLE = 5000\n\n    def scanner(self) -\u003E \u0022DataScanner\u0022:\n        return self\n\n    def scan(self, tables: Dict[str, Tuple[str, pd.DataFrame]]) -\u003E DataScan:\n        \u0022\u0022\u0022tables: nazwa pliku -\u003E (format, DataFrame).\u0022\u0022\u0022\n        started = time.perf_counter()\n        profiles = [TableProfile(name, source_format, len(frame), [self.profile_column(frame[c]) for c in frame.columns])\n                    for name, (source_format, frame) in tables.items()]\n        self.mark_keys(profiles, tables)\n        self.link_references(profiles, tables)\n        scan = DataScan(profiles)\n        detail = \u0022%d plik\u00F3w, %d kolumn, %d powi\u0105za\u0144\u0022 % (len(profiles), sum(len(p.columns) for p in profiles),\n                                                        len(scan.relations()))\n        scan.pipeline.append(PipelineStep(\u0022Data Scan\u0022, detail, time.perf_counter() - started))\n        return scan\n\n    def profile_column(self, series: pd.Series) -\u003E ColumnProfile:\n        sample = series.dropna()\n        if len(sample) \u003E self.SAMPLE:\n            sample = sample.sample(self.SAMPLE, random_state=0)\n        example = str(sample.iloc[0]) if len(sample) else \u0022\u0022\n        return ColumnProfile(name=str(series.name), type_name=self.type_of(series, sample),\n                             null_pct=float(series.isna().mean() * 100),\n                             distinct=int(series.nunique(dropna=True)), example=example[:30])\n\n    @staticmethod\n    def type_of(series: pd.Series, sample: pd.Series) -\u003E str:\n        if pd.api.types.is_bool_dtype(series):\n            return \u0022bool\u0022\n        if pd.api.types.is_integer_dtype(series):\n            return \u0022int\u0022\n        if pd.api.types.is_float_dtype(series):\n            return \u0022int\u0022 if len(sample) and bool((sample % 1 == 0).all()) else \u0022decimal\u0022\n        if pd.api.types.is_datetime64_any_dtype(series):\n            return \u0022DateTime\u0022\n        if len(sample) and bool(sample.astype(str).str.match(r\u0022^\\d{4}-\\d{2}-\\d{2}\u0022).all()):\n            return \u0022DateTime\u0022\n        return \u0022string\u0022\n\n    @staticmethod\n    def is_id_name(name: str) -\u003E bool:\n        lowered = name.lower()\n        return lowered == \u0022id\u0022 or lowered.endswith(\u0022_id\u0022)\n\n    def mark_keys(self, profiles: List[TableProfile], tables: Dict[str, Tuple[str, pd.DataFrame]]) -\u003E None:\n        for profile in profiles:\n            frame = tables[profile.name][1]\n            for column in profile.columns:\n                values = frame[column.name]\n                if self.is_id_name(column.name) and bool(values.notna().all()) and values.is_unique:\n                    column.is_key = True\n                    break\n\n    def link_references(self, profiles: List[TableProfile], tables: Dict[str, Tuple[str, pd.DataFrame]]) -\u003E None:\n        owners = [(p.key(), p.name) for p in profiles if p.key()]\n        for profile in profiles:\n            frame = tables[profile.name][1]\n            for column in profile.columns:\n                if column.is_key:\n                    continue\n                for key, owner in owners:\n                    if key == column.name and owner != profile.name:\n                        own_values = pd.Series(frame[column.name].dropna().unique())\n                        if bool(own_values.isin(tables[owner][1][key]).all()):\n                            column.references = \u0022%s.%s\u0022 % (owner, key)\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "DataScanner.md",
+        "nodeCathegory": 3,
+        "id": 43,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 67,
+            "title": "scanner",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 67,
+              "title": "scanner",
+              "connecttionType": 0
+            }
+          ],
+          "description": "DataScanner",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "DataScanner",
+        "targetPath": ""
+      },
+      "locationX": 0,
+      "locationY": 300
+    },
+    {
+      "nodeData": {
+        "codeText": "class AnomalySettings:\n    \u0022\u0022\u0022Ustawienia analizy \u2014 zmieniasz je w Inspektorze tego bloku, sekcja INITIALISER (Refresh \u2192 zmie\u0144 \u2192 Apply).\n\n    n_orders           ile zam\u00F3wie\u0144 ma mie\u0107 zbi\u00F3r demonstracyjny (powstaje tylko, gdy input/ jest pusty)\n    regenerate         True = wygeneruj dane demo od nowa, nawet je\u015Bli ju\u017C s\u0105\n    seed               ziarno losowania danych demo\n    price_z            ile odchyle\u0144 (odpornych, MAD) cena mo\u017Ce odbiega\u0107 od typowej ceny produktu\n    quantity_z         to samo dla ilo\u015Bci (w skali logarytmicznej)\n    discount_gap_pp    o ile punkt\u00F3w rabat mo\u017Ce przekroczy\u0107 typowy rabat segmentu klienta\n    night_end_hour     zam\u00F3wienia przed t\u0105 godzin\u0105 (i od 22:00, i w niedziele) s\u0105 nietypowe\n    duplicate_minutes  to samo zam\u00F3wienie powt\u00F3rzone w tylu minutach = podejrzany duplikat\n    behaviour_ratio    ile razy wi\u0119cej zam\u00F3wie\u0144 w ostatnim miesi\u0105cu ni\u017C \u015Brednio = nag\u0142a zmiana\n    similarity         podobie\u0144stwo koszyk\u00F3w (cosinus 0\u20131), od kt\u00F3rego klienci s\u0105 \u201Eklonami\u201D\n    \u0022\u0022\u0022\n\n    def __init__(self, n_orders: int = 1000000, regenerate: bool = False, seed: int = 42, price_z: float = 6.0, quantity_z: float = 5.0, discount_gap_pp: float = 15.0, night_end_hour: int = 6, duplicate_minutes: int = 10, behaviour_ratio: float = 4.0, similarity: float = 0.98):\n        self.n_orders = int(n_orders)\n        self.regenerate = bool(regenerate)\n        self.seed = int(seed)\n        self.price_z = float(price_z)\n        self.quantity_z = float(quantity_z)\n        self.discount_gap_pp = float(discount_gap_pp)\n        self.night_end_hour = int(night_end_hour)\n        self.duplicate_minutes = int(duplicate_minutes)\n        self.behaviour_ratio = float(behaviour_ratio)\n        self.similarity = float(similarity)\n        if self.n_orders \u003C 10000:\n            raise ValueError(\u0022n_orders: co najmniej 10 000 zam\u00F3wie\u0144\u0022)\n        if not 0 \u003C self.similarity \u003C= 1:\n            raise ValueError(\u0022similarity: liczba z przedzia\u0142u (0, 1]\u0022)\n\n    def settings(self) -\u003E \u0022AnomalySettings\u0022:\n        return self\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "AnomalySettings.md",
+        "nodeCathegory": 3,
+        "id": 44,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 68,
+            "title": "settings",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 68,
+              "title": "settings",
+              "connecttionType": 0
+            }
+          ],
+          "description": "AnomalySettings",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "AnomalySettings",
+        "targetPath": ""
+      },
+      "locationX": 0,
+      "locationY": 450
+    },
+    {
+      "nodeData": {
+        "codeText": "import json\nimport os\nfrom typing import List\n\nimport numpy as np\nimport pandas as pd\n\nfrom AnomalySettings import AnomalySettings\nfrom ProjectFolders import ProjectFolders\n\n\nclass DemoOrderData:\n    \u0022\u0022\u0022Dane demonstracyjne hurtowni: milion zam\u00F3wie\u0144 z 9 miesi\u0119cy 2026, 2 000 klient\u00F3w, 300 produkt\u00F3w.\n\n    Pliki powstaj\u0105 w input/ tylko wtedy, gdy ich tam nie ma (albo gdy w ustawieniach regenerate=True).\n    W danych ukryto kilkadziesi\u0105t nieprawid\u0142owo\u015Bci: rabaty 35\u201345% (g\u0142\u00F3wnie jednego handlowca), ceny poni\u017Cej\n    kosztu, gigantyczne ilo\u015Bci, zam\u00F3wienia nocne, duplikaty, trzech klient\u00F3w o identycznym wzorcu zakup\u00F3w\n    i dw\u00F3ch klient\u00F3w, kt\u00F3rzy w ostatnim miesi\u0105cu nagle zamawiaj\u0105 kilka razy wi\u0119cej ni\u017C zwykle.\n    \u0022\u0022\u0022\n\n    FILES = (\u0022orders.csv\u0022, \u0022customers.json\u0022, \u0022products.xlsx\u0022)\n    SEGMENTS = {\u0022Hurt\u0022: (0.25, 8.0), \u0022Sie\u0107\u0022: (0.10, 12.0), \u0022Detal\u0022: (0.35, 2.0), \u0022Instalator\u0022: (0.22, 5.0), \u0022Eksport\u0022: (0.08, 6.0)}\n    CATEGORIES = [\u0022Kabel\u0022, \u0022Z\u0142\u0105czka\u0022, \u0022Profil\u0022, \u0022Uszczelka\u0022, \u0022Wkr\u0119t\u0022, \u0022Panel\u0022, \u0022Zaw\u00F3r\u0022, \u0022Czujnik\u0022, \u0022Lampa\u0022, \u0022Modu\u0142\u0022]\n    N_CUSTOMERS = 2000\n    N_PRODUCTS = 300\n    N_REPS = 20\n    START = np.datetime64(\u00222026-01-01T00:00:00\u0022)\n    DAYS = 273\n    SUSPECT_REP = \u0022H07\u0022\n    CLONE_REP = \u0022H12\u0022\n\n    def __init__(self, settings: AnomalySettings):\n        self.settings = settings\n\n    def generator(self) -\u003E \u0022DemoOrderData\u0022:\n        return self\n\n    def ensure(self, folders: ProjectFolders) -\u003E bool:\n        \u0022\u0022\u0022Tworzy brakuj\u0105ce pliki demonstracyjne; zwraca True, gdy co\u015B zapisano.\u0022\u0022\u0022\n        present = all(os.path.exists(folders.input_path(name)) for name in self.FILES)\n        if present and not self.settings.regenerate:\n            return False\n        self.write(folders)\n        return True\n\n    def write(self, folders: ProjectFolders) -\u003E None:\n        rng = np.random.default_rng(self.settings.seed)\n        customers = self.customers(rng)\n        products = self.products(rng)\n        orders = self.orders(rng, customers, products)\n        orders = self.plant_anomalies(rng, orders, customers, products)\n        orders = orders.sort_values(\u0022created_at\u0022, kind=\u0022stable\u0022).reset_index(drop=True)\n        orders.insert(0, \u0022order_id\u0022, \u0022ZM-\u0022 \u002B pd.Series(np.arange(1, len(orders) \u002B 1)).astype(str).str.zfill(7))\n        orders[\u0022created_at\u0022] = orders.created_at.dt.strftime(\u0022%Y-%m-%d %H:%M:%S\u0022)\n        orders.to_csv(folders.input_path(\u0022orders.csv\u0022), index=False)\n        with open(folders.input_path(\u0022customers.json\u0022), \u0022w\u0022, encoding=\u0022utf-8\u0022) as handle:\n            json.dump(customers.to_dict(\u0022records\u0022), handle, ensure_ascii=False, indent=1)\n        products.to_excel(folders.input_path(\u0022products.xlsx\u0022), index=False)\n\n    # \u2500\u2500 S\u0142owniki \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    def customers(self, rng: np.random.Generator) -\u003E pd.DataFrame:\n        names = list(self.SEGMENTS)\n        shares = np.array([self.SEGMENTS[n][0] for n in names])\n        count = self.N_CUSTOMERS \u002B 3\n        segment = rng.choice(names, size=count, p=shares / shares.sum())\n        rep = np.array([\u0022H%02d\u0022 % (i \u002B 1) for i in rng.integers(0, self.N_REPS, size=count)])\n        segment[-3:], rep[-3:] = \u0022Hurt\u0022, self.CLONE_REP\n        stems = [\u0022Elektro\u0022, \u0022Bud\u0022, \u0022Instal\u0022, \u0022Term\u0022, \u0022Hydro\u0022, \u0022Tech\u0022, \u0022Mont\u0022, \u0022Pol\u0022, \u0022Eko\u0022, \u0022Inwest\u0022]\n        tails = [\u0022mex\u0022, \u0022pol\u0022, \u0022serwis\u0022, \u0022trade\u0022, \u0022system\u0022, \u0022bud\u0022, \u0022hurt\u0022, \u0022group\u0022]\n        name = [\u0022%s%s %s\u0022 % (rng.choice(stems), rng.choice(tails), rng.choice([\u0022sp. z o.o.\u0022, \u0022S.A.\u0022, \u0022sp.j.\u0022])) for _ in range(count)]\n        return pd.DataFrame({\u0022customer_id\u0022: [\u0022C%04d\u0022 % (i \u002B 1) for i in range(count)], \u0022name\u0022: name,\n                             \u0022segment\u0022: segment, \u0022sales_rep\u0022: rep,\n                             \u0022since\u0022: [\u00222019-01-01\u0022] * self.N_CUSTOMERS \u002B [\u00222026-07-20\u0022] * 3})\n\n    def products(self, rng: np.random.Generator) -\u003E pd.DataFrame:\n        price = np.round(np.exp(rng.normal(4.0, 0.9, self.N_PRODUCTS)), 2)\n        category = rng.choice(self.CATEGORIES, size=self.N_PRODUCTS)\n        return pd.DataFrame({\u0022product_id\u0022: [\u0022PR-%04d\u0022 % (i \u002B 1) for i in range(self.N_PRODUCTS)],\n                             \u0022name\u0022: [\u0022%s %s-%03d\u0022 % (c, c[:2].upper(), i \u002B 1) for i, c in enumerate(category)],\n                             \u0022category\u0022: category, \u0022list_price\u0022: price,\n                             \u0022unit_cost\u0022: np.round(price * rng.uniform(0.55, 0.75, self.N_PRODUCTS), 2),\n                             \u0022typical_qty\u0022: np.maximum(1, np.round(np.exp(rng.normal(2.5, 0.8, self.N_PRODUCTS))))})\n\n    # \u2500\u2500 Zwyk\u0142e zam\u00F3wienia \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    def orders(self, rng: np.random.Generator, customers: pd.DataFrame, products: pd.DataFrame) -\u003E pd.DataFrame:\n        n = self.settings.n_orders\n        regular = self.N_CUSTOMERS\n        weight = rng.pareto(1.5, regular) \u002B 1\n        customer = rng.choice(regular, size=n, p=weight / weight.sum())\n        preferences = rng.integers(0, self.N_PRODUCTS, size=(regular, 12))\n        product = np.where(rng.random(n) \u003C 0.85, preferences[customer, rng.integers(0, 12, size=n)],\n                           rng.integers(0, self.N_PRODUCTS, size=n))\n        return self.frame(rng, customers, products, customer, product, self.business_times(rng, n))\n\n    def business_times(self, rng: np.random.Generator, n: int, first_day: int = 0, days: int = DAYS) -\u003E np.ndarray:\n        day = rng.integers(first_day, first_day \u002B days, size=n)\n        stamps = self.START \u002B day.astype(\u0022timedelta64[D]\u0022)\n        weekday = (stamps.astype(\u0022datetime64[D]\u0022).view(\u0022int64\u0022) - 4) % 7  # 0 = poniedzia\u0142ek\n        stamps = stamps \u002B (weekday == 6).astype(\u0022timedelta64[D]\u0022)  # niedziela \u2192 poniedzia\u0142ek\n        seconds = rng.integers(7 * 3600, 18 * 3600, size=n)\n        return stamps \u002B seconds.astype(\u0022timedelta64[s]\u0022)\n\n    def frame(self, rng, customers, products, customer, product, times) -\u003E pd.DataFrame:\n        n = len(customer)\n        segment = customers.segment.to_numpy()[customer]\n        base_discount = np.array([self.SEGMENTS[s][1] for s in segment])\n        typical = products.typical_qty.to_numpy()[product]\n        return pd.DataFrame({\n            \u0022created_at\u0022: pd.to_datetime(times),\n            \u0022customer_id\u0022: customers.customer_id.to_numpy()[customer],\n            \u0022product_id\u0022: products.product_id.to_numpy()[product],\n            \u0022sales_rep\u0022: customers.sales_rep.to_numpy()[customer],\n            \u0022quantity\u0022: np.maximum(1, np.round(typical * np.exp(rng.normal(0, 0.5, n)))).astype(int),\n            \u0022unit_price\u0022: np.round(products.list_price.to_numpy()[product] * (1 \u002B rng.normal(0, 0.02, n)), 2),\n            \u0022discount_pct\u0022: np.round(np.clip(base_discount \u002B rng.normal(0, 1.0, n), 0, base_discount \u002B 3), 1),\n        })\n\n    # \u2500\u2500 Ukryte nieprawid\u0142owo\u015Bci \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    def plant_anomalies(self, rng, orders: pd.DataFrame, customers: pd.DataFrame, products: pd.DataFrame) -\u003E pd.DataFrame:\n        cost = products.set_index(\u0022product_id\u0022).unit_cost\n        used = set()\n\n        def pick(mask, count):\n            pool = np.flatnonzero(mask \u0026 ~orders.index.isin(list(used)))\n            chosen = rng.choice(pool, size=count, replace=False)\n            used.update(chosen.tolist())\n            return chosen\n\n        everyone = np.ones(len(orders), dtype=bool)\n        rows = np.concatenate([pick(orders.sales_rep.to_numpy() == self.SUSPECT_REP, 9), pick(everyone, 3)])\n        orders.loc[rows, \u0022discount_pct\u0022] = np.round(rng.uniform(35, 45, len(rows)), 1)\n        rows = pick(everyone, 8)\n        orders.loc[rows, \u0022unit_price\u0022] = np.round(cost.reindex(orders.loc[rows, \u0022product_id\u0022]).to_numpy() * rng.uniform(0.55, 0.8, 8), 2)\n        rows = pick(everyone, 6)\n        orders.loc[rows, \u0022quantity\u0022] = orders.loc[rows, \u0022quantity\u0022] * 40\n        rows = pick(everyone, 5)\n        night = orders.loc[rows, \u0022created_at\u0022].dt.normalize() \u002B pd.to_timedelta(rng.integers(3600, 4 * 3600, 5), unit=\u0022s\u0022)\n        orders.loc[rows, \u0022created_at\u0022] = night.to_numpy()\n        copies = orders.loc[pick(everyone, 4)].copy()\n        copies[\u0022created_at\u0022] = copies.created_at \u002B pd.to_timedelta(rng.integers(60, 240, 4), unit=\u0022s\u0022)\n        return pd.concat([orders, copies, self.clones(rng, customers, products), self.bursts(rng, orders, customers, products)],\n                         ignore_index=True)\n\n    def clones(self, rng, customers: pd.DataFrame, products: pd.DataFrame) -\u003E pd.DataFrame:\n        \u0022\u0022\u0022Trzech nowych klient\u00F3w kupuje to samo, w tych samych ilo\u015Bciach, prawie w tych samych chwilach.\u0022\u0022\u0022\n        basket = rng.choice(self.N_PRODUCTS, size=8, replace=False)\n        product = np.tile(rng.choice(basket, size=40), 3)\n        customer = np.repeat(np.arange(self.N_CUSTOMERS, self.N_CUSTOMERS \u002B 3), 40)\n        times = np.tile(self.business_times(rng, 40, first_day=201, days=72), 3)\n        frame = self.frame(rng, customers, products, customer, product, times)\n        frame[\u0022created_at\u0022] = frame.created_at \u002B pd.to_timedelta(np.repeat([0, 7, 13], 40), unit=\u0022m\u0022)\n        frame[\u0022quantity\u0022] = np.tile(frame.quantity.to_numpy()[:40], 3)\n        return frame\n\n    def bursts(self, rng, orders: pd.DataFrame, customers: pd.DataFrame, products: pd.DataFrame) -\u003E pd.DataFrame:\n        \u0022\u0022\u0022Dw\u00F3ch zwyk\u0142ych klient\u00F3w, kt\u00F3rzy we wrze\u015Bniu zamawiaj\u0105 ~6\u00D7 wi\u0119cej ni\u017C zwykle.\u0022\u0022\u0022\n        counts = orders.customer_id.value_counts()\n        steady = counts[(counts \u003E 150) \u0026 (counts \u003C 400)].index[:2]\n        index = {cid: i for i, cid in enumerate(customers.customer_id)}\n        frames = []\n        for cid in steady:\n            monthly = counts[cid] / 9\n            extra = int(monthly * 5)\n            history = orders.loc[orders.customer_id == cid, \u0022product_id\u0022].to_numpy()\n            product = products.index[products.product_id.isin(history)].to_numpy()\n            frames.append(self.frame(rng, customers, products, np.full(extra, index[cid]), rng.choice(product, size=extra),\n                                     self.business_times(rng, extra, first_day=243, days=30)))\n        return pd.concat(frames, ignore_index=True)\n",
+        "maxInputNumber": 1,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "DemoOrderData.md",
+        "nodeCathegory": 3,
+        "id": 45,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 1,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 69,
+            "title": "settings",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 69,
+              "title": "settings",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 70,
+            "title": "generator",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 70,
+              "title": "generator",
+              "connecttionType": 0
+            }
+          ],
+          "description": "DemoOrderData",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "DemoOrderData",
+        "targetPath": ""
+      },
+      "locationX": 300,
+      "locationY": 400
+    },
+    {
+      "nodeData": {
+        "codeText": "import time\n\nimport pandas as pd\n\nfrom DataScanner import DataScanner\nfrom DemoOrderData import DemoOrderData\nfrom OrderDataset import OrderDataset\nfrom PipelineStep import PipelineStep\nfrom ProjectFolders import ProjectFolders\nfrom TableReader import TableReader\n\n\nclass OrderDataLoader:\n    \u0022\u0022\u0022Wczytuje zam\u00F3wienia (CSV), klient\u00F3w (JSON) i produkty (Excel), robi Data Scan i \u0142\u0105czy je w jedn\u0105 tabel\u0119.\u0022\u0022\u0022\n\n    ORDER_TYPES = {\u0022order_id\u0022: \u0022string\u0022, \u0022customer_id\u0022: \u0022category\u0022, \u0022product_id\u0022: \u0022category\u0022, \u0022sales_rep\u0022: \u0022category\u0022}\n    REQUIRED = {\n        \u0022orders.csv\u0022: [\u0022order_id\u0022, \u0022created_at\u0022, \u0022customer_id\u0022, \u0022product_id\u0022, \u0022sales_rep\u0022, \u0022quantity\u0022, \u0022unit_price\u0022, \u0022discount_pct\u0022],\n        \u0022customers.json\u0022: [\u0022customer_id\u0022, \u0022name\u0022, \u0022segment\u0022],\n        \u0022products.xlsx\u0022: [\u0022product_id\u0022, \u0022name\u0022, \u0022list_price\u0022, \u0022unit_cost\u0022],\n    }\n\n    def __init__(self, folders: ProjectFolders, reader: TableReader, generator: DemoOrderData, scanner: DataScanner):\n        self.folders = folders\n        self.reader = reader\n        self.generator = generator\n        self.scanner = scanner\n\n    def dataset(self) -\u003E OrderDataset:\n        started = time.perf_counter()\n        demo = self.generator.ensure(self.folders)\n        generated = time.perf_counter() - started\n        started = time.perf_counter()\n        tables = {}\n        for name, columns in self.REQUIRED.items():\n            path = self.folders.input_path(name)\n            frame = self.reader.read(path, self.ORDER_TYPES if name == \u0022orders.csv\u0022 else None)\n            missing = [c for c in columns if c not in frame.columns]\n            if missing:\n                raise ValueError(\u0022%s: brak kolumn %s\u0022 % (name, \u0022, \u0022.join(missing)))\n            tables[name] = (self.reader.format_of(path), frame)\n        loaded = time.perf_counter() - started\n        scan = self.scanner.scan(tables)\n        frames = {name: frame for name, (_, frame) in tables.items()}\n        if demo:\n            scan.pipeline.insert(0, PipelineStep(\u0022Generate demo\u0022, \u0022dane demonstracyjne zapisane w input/\u0022, generated))\n        scan.pipeline.insert(1 if demo else 0, PipelineStep(\u0022Load\u0022, \u0022%s zam\u00F3wie\u0144 \u002B %d klient\u00F3w \u002B %d produkt\u00F3w\u0022 % (\n            format(len(frames[\u0022orders.csv\u0022]), \u0022,\u0022).replace(\u0022,\u0022, \u0022 \u0022), len(frames[\u0022customers.json\u0022]), len(frames[\u0022products.xlsx\u0022])), loaded))\n        orders = self.join(frames, scan)\n        return OrderDataset(orders, frames[\u0022customers.json\u0022], frames[\u0022products.xlsx\u0022], scan, demo)\n\n    @staticmethod\n    def join(frames, scan) -\u003E pd.DataFrame:\n        started = time.perf_counter()\n        orders = frames[\u0022orders.csv\u0022]\n        orders[\u0022created_at\u0022] = pd.to_datetime(orders.created_at, format=\u0022%Y-%m-%d %H:%M:%S\u0022)\n        customers = frames[\u0022customers.json\u0022].set_index(\u0022customer_id\u0022)\n        products = frames[\u0022products.xlsx\u0022].set_index(\u0022product_id\u0022)\n        orders[\u0022segment\u0022] = orders.customer_id.map(customers.segment).astype(\u0022category\u0022)\n        orders[\u0022list_price\u0022] = orders.product_id.map(products.list_price).astype(float)\n        orders[\u0022unit_cost\u0022] = orders.product_id.map(products.unit_cost).astype(float)\n        orders[\u0022net_price\u0022] = orders.unit_price * (1 - orders.discount_pct / 100)\n        orders[\u0022value\u0022] = orders.quantity * orders.net_price\n        scan.pipeline.append(PipelineStep(\u0022Validate \u002B Join\u0022, \u0022zam\u00F3wienia \u00D7 klienci \u00D7 produkty, braki w s\u0142ownikach: %d\u0022 % int(\n            orders.segment.isna().sum() \u002B orders.unit_cost.isna().sum()), time.perf_counter() - started))\n        return orders\n",
+        "maxInputNumber": 4,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "OrderDataLoader.md",
+        "nodeCathegory": 3,
+        "id": 46,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 4,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 71,
+            "title": "folders",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 71,
+              "title": "folders",
+              "connecttionType": 0
+            },
+            {
+              "id": 72,
+              "title": "reader",
+              "connecttionType": 0
+            },
+            {
+              "id": 73,
+              "title": "generator",
+              "connecttionType": 0
+            },
+            {
+              "id": 74,
+              "title": "scanner",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 75,
+            "title": "dataset",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 75,
+              "title": "dataset",
+              "connecttionType": 0
+            }
+          ],
+          "description": "OrderDataLoader",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "OrderDataLoader",
+        "targetPath": ""
+      },
+      "locationX": 600,
+      "locationY": 150
+    },
+    {
+      "nodeData": {
+        "codeText": "from typing import Callable, Dict\n\nimport numpy as np\nimport pandas as pd\n\nfrom AnomalySettings import AnomalySettings\n\n\nclass OrderRules:\n    \u0022\u0022\u0022Regu\u0142y dla pojedynczego zam\u00F3wienia. Ka\u017Cda zwraca mask\u0119 True/False dla wszystkich zam\u00F3wie\u0144 naraz.\n\n    Typowe warto\u015Bci liczone s\u0105 per produkt lub per segment klienta, a odchylenia odpornie (mediana i MAD),\n    wi\u0119c kilka nieprawid\u0142owych zam\u00F3wie\u0144 nie przesuwa samej normy.\n    \u0022\u0022\u0022\n\n    def __init__(self, settings: AnomalySettings):\n        self.settings = settings\n\n    def rules(self) -\u003E \u0022OrderRules\u0022:\n        return self\n\n    def catalogue(self) -\u003E Dict[str, Callable[[pd.DataFrame], pd.Series]]:\n        return {\n            \u0022Cena poni\u017Cej kosztu\u0022: self.below_cost,\n            \u0022Nietypowy rabat\u0022: self.unusual_discount,\n            \u0022Cena odbiega od cennika\u0022: self.unusual_price,\n            \u0022Nietypowa ilo\u015B\u0107\u0022: self.unusual_quantity,\n            \u0022Nietypowa pora\u0022: self.off_hours,\n            \u0022Mo\u017Cliwy duplikat\u0022: self.duplicate,\n        }\n\n    @staticmethod\n    def robust_z(values: pd.Series, groups: pd.Series) -\u003E pd.Series:\n        grouped = values.groupby(groups, observed=True)\n        median = grouped.transform(\u0022median\u0022)\n        mad = (values - median).abs().groupby(groups, observed=True).transform(\u0022median\u0022)\n        return 0.6745 * (values - median) / mad.replace(0, np.nan)\n\n    def below_cost(self, orders: pd.DataFrame) -\u003E pd.Series:\n        return orders.net_price \u003C orders.unit_cost\n\n    def unusual_discount(self, orders: pd.DataFrame) -\u003E pd.Series:\n        typical = orders.discount_pct.groupby(orders.segment, observed=True).transform(\u0022median\u0022)\n        return orders.discount_pct - typical \u003E self.settings.discount_gap_pp\n\n    def unusual_price(self, orders: pd.DataFrame) -\u003E pd.Series:\n        return self.robust_z(orders.unit_price, orders.product_id).abs() \u003E self.settings.price_z\n\n    def unusual_quantity(self, orders: pd.DataFrame) -\u003E pd.Series:\n        return self.robust_z(np.log(orders.quantity.astype(float)), orders.product_id) \u003E self.settings.quantity_z\n\n    def off_hours(self, orders: pd.DataFrame) -\u003E pd.Series:\n        hour = orders.created_at.dt.hour\n        return (hour \u003C self.settings.night_end_hour) | (hour \u003E= 22) | (orders.created_at.dt.dayofweek == 6)\n\n    def duplicate(self, orders: pd.DataFrame) -\u003E pd.Series:\n        keys = [\u0022customer_id\u0022, \u0022product_id\u0022, \u0022quantity\u0022, \u0022unit_price\u0022, \u0022discount_pct\u0022]\n        ordered = orders.sort_values(keys \u002B [\u0022created_at\u0022])\n        same = (ordered[keys] == ordered[keys].shift()).all(axis=1)\n        close = ordered.created_at.diff() \u003C= pd.Timedelta(minutes=self.settings.duplicate_minutes)\n        return (same \u0026 close).reindex(orders.index)\n",
+        "maxInputNumber": 1,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "OrderRules.md",
+        "nodeCathegory": 3,
+        "id": 47,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 1,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 76,
+            "title": "settings",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 76,
+              "title": "settings",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 77,
+            "title": "rules",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 77,
+              "title": "rules",
+              "connecttionType": 0
+            }
+          ],
+          "description": "OrderRules",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "OrderRules",
+        "targetPath": ""
+      },
+      "locationX": 300,
+      "locationY": 550
+    },
+    {
+      "nodeData": {
+        "codeText": "from typing import Dict, List\n\nimport numpy as np\nimport pandas as pd\n\nfrom AnomalySettings import AnomalySettings\n\n\nclass CustomerPatterns:\n    \u0022\u0022\u0022Regu\u0142y na poziomie klienta: nag\u0142a zmiana zachowania i klienci o niemal identycznym wzorcu zakup\u00F3w.\u0022\u0022\u0022\n\n    MIN_ORDERS = 20\n    MIN_MONTHLY = 5\n\n    def __init__(self, settings: AnomalySettings):\n        self.settings = settings\n\n    def patterns(self) -\u003E \u0022CustomerPatterns\u0022:\n        return self\n\n    def behaviour_changes(self, orders: pd.DataFrame) -\u003E List[Dict[str, object]]:\n        \u0022\u0022\u0022Klienci, kt\u00F3rzy w ostatnim miesi\u0105cu zam\u00F3wili behaviour_ratio razy wi\u0119cej ni\u017C ich \u015Brednia.\u0022\u0022\u0022\n        month = orders.created_at.dt.to_period(\u0022M\u0022)\n        last = month.max()\n        counts = orders.groupby([orders.customer_id, month], observed=True).size().unstack(fill_value=0)\n        before = counts.drop(columns=[last]).mean(axis=1)\n        ratio = counts[last] / before.replace(0, np.nan)\n        hits = ratio[(ratio \u003E= self.settings.behaviour_ratio) \u0026 (before \u003E= self.MIN_MONTHLY)].sort_values(ascending=False)\n        values = orders[month == last].groupby(\u0022customer_id\u0022, observed=True).value.sum()\n        return [{\u0022customer_id\u0022: cid, \u0022\u015Arednio / mies.\u0022: round(float(before[cid]), 1), \u0022Ostatni miesi\u0105c\u0022: int(counts.at[cid, last]),\n                 \u0022Krotno\u015B\u0107\u0022: round(float(ratio[cid]), 1), \u0022Warto\u015B\u0107 ost. miesi\u0105ca\u0022: round(float(values.get(cid, 0.0)))}\n                for cid in hits.index]\n\n    def similar_groups(self, orders: pd.DataFrame) -\u003E List[List[str]]:\n        \u0022\u0022\u0022Grupy klient\u00F3w, kt\u00F3rych koszyki (udzia\u0142 ilo\u015Bci w produktach) maj\u0105 podobie\u0144stwo cosinusowe \u2265 similarity.\u0022\u0022\u0022\n        active = orders.customer_id.value_counts()\n        active = active[active \u003E= self.MIN_ORDERS].index\n        subset = orders[orders.customer_id.isin(active)]\n        matrix = subset.pivot_table(index=\u0022customer_id\u0022, columns=\u0022product_id\u0022, values=\u0022quantity\u0022, aggfunc=\u0022sum\u0022,\n                                    fill_value=0, observed=True)\n        vectors = matrix.to_numpy(dtype=float)\n        vectors = vectors / np.linalg.norm(vectors, axis=1, keepdims=True)\n        similarity = vectors @ vectors.T\n        np.fill_diagonal(similarity, 0)\n        pairs = np.argwhere(np.triu(similarity \u003E= self.settings.similarity))\n        return self.connected(pairs, list(matrix.index))\n\n    @staticmethod\n    def connected(pairs: np.ndarray, names: List[str]) -\u003E List[List[str]]:\n        parent = list(range(len(names)))\n\n        def root(i: int) -\u003E int:\n            while parent[i] != i:\n                parent[i] = parent[parent[i]]\n                i = parent[i]\n            return i\n\n        for a, b in pairs:\n            parent[root(a)] = root(b)\n        groups: Dict[int, List[str]] = {}\n        for i in {int(x) for pair in pairs for x in pair}:\n            groups.setdefault(root(i), []).append(names[i])\n        return [sorted(g) for g in groups.values()]\n",
+        "maxInputNumber": 1,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "CustomerPatterns.md",
+        "nodeCathegory": 3,
+        "id": 48,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 1,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 78,
+            "title": "settings",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 78,
+              "title": "settings",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 79,
+            "title": "patterns",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 79,
+              "title": "patterns",
+              "connecttionType": 0
+            }
+          ],
+          "description": "CustomerPatterns",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "CustomerPatterns",
+        "targetPath": ""
+      },
+      "locationX": 300,
+      "locationY": 700
+    },
+    {
+      "nodeData": {
+        "codeText": "import time\nfrom typing import Dict, List\n\nimport pandas as pd\n\nfrom AnomalyReport import AnomalyReport\nfrom CustomerPatterns import CustomerPatterns\nfrom OrderDataset import OrderDataset\nfrom OrderRules import OrderRules\nfrom PipelineStep import PipelineStep\n\n\nclass AnomalyDetector:\n    \u0022\u0022\u0022Przepuszcza wszystkie zam\u00F3wienia przez regu\u0142y i wzorce klient\u00F3w i zbiera to, co warto sprawdzi\u0107.\u0022\u0022\u0022\n\n    def __init__(self, dataset: OrderDataset, rules: OrderRules, patterns: CustomerPatterns):\n        self.dataset = dataset\n        self.rules = rules\n        self.patterns = patterns\n        self._report = None\n\n    def findings(self) -\u003E AnomalyReport:\n        if self._report is None:\n            self._report = self.detect()\n        return self._report\n\n    def detect(self) -\u003E AnomalyReport:\n        orders = self.dataset.orders\n        scan = self.dataset.scan\n        masks = {}\n        for name, rule in self.rules.catalogue().items():\n            begun = time.perf_counter()\n            masks[name] = rule(orders).fillna(False).to_numpy(dtype=bool)\n            scan.pipeline.append(PipelineStep(\u0022Rule: \u0022 \u002B name, \u0022%d trafie\u0144\u0022 % int(masks[name].sum()), time.perf_counter() - begun))\n        hits = pd.DataFrame(masks, index=orders.index)\n        any_hit = hits.any(axis=1)\n        flagged = self.flagged_table(orders[any_hit], hits[any_hit])\n\n        begun = time.perf_counter()\n        groups = self.patterns.similar_groups(orders)\n        behaviour = self.patterns.behaviour_changes(orders)\n        scan.pipeline.append(PipelineStep(\u0022Customer patterns\u0022, \u0022%d grup klon\u00F3w, %d nag\u0142ych zmian\u0022 % (len(groups), len(behaviour)),\n                                          time.perf_counter() - begun))\n        report = AnomalyReport(\n            total_orders=len(orders), total_value=float(orders.value.sum()), flagged=flagged,\n            rule_rows=self.rule_rows(orders, hits), similar_groups=groups, similar_rows=self.similar_rows(orders, groups),\n            behaviour_rows=self.named(behaviour), rep_rows=self.rep_rows(orders, hits), scan=scan, demo=self.dataset.demo)\n        report.seconds = sum(step.seconds for step in scan.pipeline if step.name != \u0022Generate demo\u0022)\n        return report\n\n    def flagged_table(self, orders: pd.DataFrame, hits: pd.DataFrame) -\u003E pd.DataFrame:\n        names = self.customer_names()\n        products = self.dataset.products.set_index(\u0022product_id\u0022).name\n        reasons = hits.apply(lambda row: \u0022, \u0022.join(name for name, hit in row.items() if hit), axis=1)\n        loss = ((orders.unit_cost - orders.net_price) * orders.quantity).clip(lower=0)\n        table = pd.DataFrame({\n            \u0022Zam\u00F3wienie\u0022: orders.order_id.astype(str), \u0022Data\u0022: orders.created_at.dt.strftime(\u0022%Y-%m-%d %H:%M\u0022),\n            \u0022Klient\u0022: orders.customer_id.astype(str) \u002B \u0022 \u0022 \u002B orders.customer_id.astype(str).map(names),\n            \u0022Segment\u0022: orders.segment.astype(str), \u0022Produkt\u0022: orders.product_id.astype(str).map(products),\n            \u0022Handlowiec\u0022: orders.sales_rep.astype(str), \u0022Ilo\u015B\u0107\u0022: orders.quantity, \u0022Cena\u0022: orders.unit_price.round(2),\n            \u0022Rabat %\u0022: orders.discount_pct, \u0022Warto\u015B\u0107\u0022: orders.value.round(2), \u0022Strata\u0022: loss.round(2),\n            \u0022Powody\u0022: reasons, \u0022Liczba regu\u0142\u0022: hits.sum(axis=1)})\n        return table.sort_values([\u0022Liczba regu\u0142\u0022, \u0022Warto\u015B\u0107\u0022], ascending=False).reset_index(drop=True)\n\n    @staticmethod\n    def rule_rows(orders: pd.DataFrame, hits: pd.DataFrame) -\u003E List[Dict[str, object]]:\n        return [{\u0022Regu\u0142a\u0022: name, \u0022Zam\u00F3wienia\u0022: int(hits[name].sum()), \u0022Warto\u015B\u0107\u0022: round(float(orders.value[hits[name]].sum()))}\n                for name in hits.columns]\n\n    @staticmethod\n    def rep_rows(orders: pd.DataFrame, hits: pd.DataFrame) -\u003E List[Dict[str, object]]:\n        \u0022\u0022\u0022Kto stoi za rabatami i cenami poni\u017Cej kosztu \u2014 koncentracja u jednej osoby to sygna\u0142.\u0022\u0022\u0022\n        pricing = hits[\u0022Nietypowy rabat\u0022] | hits[\u0022Cena poni\u017Cej kosztu\u0022]\n        if not pricing.any():\n            return []\n        counts = orders.sales_rep[pricing].astype(str).value_counts()\n        share_of_orders = orders.sales_rep.astype(str).value_counts(normalize=True)\n        return [{\u0022Handlowiec\u0022: rep, \u0022Podejrzane ceny/rabaty\u0022: int(n), \u0022Udzia\u0142 w podejrzanych %\u0022: round(float(100 * n / pricing.sum()), 1),\n                 \u0022Udzia\u0142 we wszystkich zam\u00F3wieniach %\u0022: round(100 * float(share_of_orders.get(rep, 0)), 1)}\n                for rep, n in counts.items() if n \u003E 0]\n\n    def customer_names(self) -\u003E Dict[str, str]:\n        customers = self.dataset.customers\n        return dict(zip(customers.customer_id, customers.name))\n\n    def named(self, rows: List[Dict[str, object]]) -\u003E List[Dict[str, object]]:\n        names = self.customer_names()\n        return [{\u0022Klient\u0022: \u0022%s %s\u0022 % (r[\u0022customer_id\u0022], names.get(r[\u0022customer_id\u0022], \u0022\u0022)), **{k: v for k, v in r.items() if k != \u0022customer_id\u0022}}\n                for r in rows]\n\n    def similar_rows(self, orders: pd.DataFrame, groups: List[List[str]]) -\u003E List[Dict[str, object]]:\n        customers = self.dataset.customers.set_index(\u0022customer_id\u0022)\n        rows = []\n        for number, group in enumerate(groups, 1):\n            part = orders[orders.customer_id.isin(group)]\n            for cid in group:\n                info = customers.loc[cid]\n                mine = part[part.customer_id == cid]\n                rows.append({\u0022Grupa\u0022: number, \u0022Klient\u0022: \u0022%s %s\u0022 % (cid, info[\u0022name\u0022]),\n                             \u0022Klient od\u0022: info.get(\u0022since\u0022, \u0022\u0022), \u0022Handlowiec\u0022: info.get(\u0022sales_rep\u0022, \u0022\u0022),\n                             \u0022Zam\u00F3wienia\u0022: len(mine), \u0022Warto\u015B\u0107\u0022: round(float(mine.value.sum()))})\n        return rows\n",
+        "maxInputNumber": 3,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "AnomalyDetector.md",
+        "nodeCathegory": 3,
+        "id": 49,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 3,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 80,
+            "title": "dataset",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 80,
+              "title": "dataset",
+              "connecttionType": 0
+            },
+            {
+              "id": 81,
+              "title": "rules",
+              "connecttionType": 0
+            },
+            {
+              "id": 82,
+              "title": "patterns",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 83,
+            "title": "findings",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 83,
+              "title": "findings",
+              "connecttionType": 0
+            }
+          ],
+          "description": "AnomalyDetector",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "AnomalyDetector",
+        "targetPath": ""
+      },
+      "locationX": 900,
+      "locationY": 300
+    },
+    {
+      "nodeData": {
+        "codeText": "class PlnFormat:\n    \u0022\u0022\u0022Liczby po polsku: spacja tysi\u0119cy, przecinek dziesi\u0119tny, kwoty w z\u0142, tys. i mln.\u0022\u0022\u0022\n\n    def formatter(self) -\u003E \u0022PlnFormat\u0022:\n        return self\n\n    @staticmethod\n    def num(value: float, decimals: int = 0) -\u003E str:\n        if value is None or value != value:\n            return \u0022\u2014\u0022\n        if value in (float(\u0022inf\u0022), float(\u0022-inf\u0022)):\n            return \u0022\u221E\u0022\n        if round(value, decimals) == 0:\n            value = 0.0\n        return format(value, \u0022,.%df\u0022 % decimals).replace(\u0022,\u0022, \u0022 \u0022).replace(\u0022.\u0022, \u0022,\u0022).replace(\u0022-\u0022, \u0022\u2212\u0022)\n\n    @classmethod\n    def zl(cls, value: float, decimals: int = 0) -\u003E str:\n        return cls.num(value, decimals) \u002B \u0022 z\u0142\u0022\n\n    @classmethod\n    def short_zl(cls, value: float) -\u003E str:\n        if abs(value) \u003E= 1_000_000:\n            return cls.num(value / 1_000_000, 2) \u002B \u0022 mln z\u0142\u0022\n        if abs(value) \u003E= 1_000:\n            return cls.num(value / 1_000, 0) \u002B \u0022 tys. z\u0142\u0022\n        return cls.zl(value)\n\n    @classmethod\n    def pct(cls, value: float, decimals: int = 1) -\u003E str:\n        return cls.num(value, decimals) \u002B \u0022%\u0022\n\n    @classmethod\n    def signed_pct(cls, value: float, decimals: int = 1) -\u003E str:\n        return (\u0022\u002B\u0022 if round(value, decimals) \u003E 0 else \u0022\u0022) \u002B cls.pct(value, decimals)\n\n    @classmethod\n    def pp(cls, value: float, decimals: int = 1) -\u003E str:\n        return (\u0022\u002B\u0022 if round(value, decimals) \u003E 0 else \u0022\u0022) \u002B cls.num(value, decimals) \u002B \u0022 pp\u0022\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "PlnFormat.md",
+        "nodeCathegory": 3,
+        "id": 50,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 84,
+            "title": "formatter",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 84,
+              "title": "formatter",
+              "connecttionType": 0
+            }
+          ],
+          "description": "PlnFormat",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "PlnFormat",
+        "targetPath": ""
+      },
+      "locationX": 600,
+      "locationY": 600
+    },
+    {
+      "nodeData": {
+        "codeText": "from typing import List\r\n\r\nfrom AnomalyReport import AnomalyReport\r\nfrom PlnFormat import PlnFormat\r\n\r\n\r\nclass AnomalyNarrator:\r\n    \u0022\u0022\u0022Zamienia wynik przegl\u0105du w kilka zda\u0144: ile zam\u00F3wie\u0144 sprawdzi\u0107, dlaczego i kto za nimi stoi.\u0022\u0022\u0022\r\n\r\n    def __init__(self, formatter: PlnFormat):\r\n        self.formatter = formatter\r\n\r\n    def narrator(self) -\u003E \u0022AnomalyNarrator\u0022:\r\n        return self\r\n\r\n    def headline(self, report: AnomalyReport) -\u003E str:\r\n        f = self.formatter\r\n        return \u0022%s zam\u00F3wie\u0144 przejrzanych w %s s \u2192 %d do sprawdzenia (%s z %s obrotu).\u0022 % (\r\n            f.num(report.total_orders), f.num(report.seconds, 1), report.flagged_count,\r\n            f.short_zl(report.flagged_value), f.short_zl(report.total_value))\r\n\r\n    def findings(self, report: AnomalyReport) -\u003E List[str]:\r\n        f = self.formatter\r\n        counts = {row[\u0022Regu\u0142a\u0022]: row[\u0022Zam\u00F3wienia\u0022] for row in report.rule_rows}\r\n        lines = []\r\n        discounts = counts.get(\u0022Nietypowy rabat\u0022, 0)\r\n        if discounts:\r\n            line = \u0022%d ma nietypowy rabat\u0022 % discounts\r\n            if report.rep_rows and report.rep_rows[0][\u0022Udzia\u0142 w podejrzanych %\u0022] \u003E= 30:\r\n                top = report.rep_rows[0]\r\n                line \u002B= \u0022 \u2014 %d podejrzanych cen i rabat\u00F3w to handlowiec %s, kt\u00F3ry obs\u0142uguje tylko %s zam\u00F3wie\u0144\u0022 % (\r\n                    top[\u0022Podejrzane ceny/rabaty\u0022], top[\u0022Handlowiec\u0022], f.pct(top[\u0022Udzia\u0142 we wszystkich zam\u00F3wieniach %\u0022]))\r\n            lines.append(line \u002B \u0022.\u0022)\r\n        below = counts.get(\u0022Cena poni\u017Cej kosztu\u0022, 0)\r\n        if below:\r\n            loss = float(report.flagged[\u0022Strata\u0022].sum())\r\n            lines.append(\u0022%d sprzedano poni\u017Cej kosztu (strata %s).\u0022 % (below, f.zl(loss)))\r\n        for rule, text in ((\u0022Cena odbiega od cennika\u0022, \u0022%d ma cen\u0119 daleko od cennika.\u0022),\r\n                           (\u0022Nietypowa ilo\u015B\u0107\u0022, \u0022%d ma ilo\u015B\u0107 wielokrotnie wi\u0119ksz\u0105 ni\u017C zwykle dla tego produktu.\u0022),\r\n                           (\u0022Nietypowa pora\u0022, \u0022%d z\u0142o\u017Cono w nocy albo w niedziel\u0119.\u0022),\r\n                           (\u0022Mo\u017Cliwy duplikat\u0022, \u0022%d to prawdopodobne duplikaty (to samo zam\u00F3wienie w ci\u0105gu kilku minut).\u0022)):\r\n            if counts.get(rule, 0):\r\n                lines.append(text % counts[rule])\r\n        for group in report.similar_groups:\r\n            rows = [r for r in report.similar_rows if r[\u0022Klient\u0022].split(\u0022 \u0022)[0] in group]\r\n            since = {str(r[\u0022Klient od\u0022]) for r in rows}\r\n            reps = {str(r[\u0022Handlowiec\u0022]) for r in rows}\r\n            lines.append(\u0022%d klient\u00F3w (%s) ma niemal identyczny wzorzec zam\u00F3wie\u0144%s%s.\u0022 % (\r\n                len(group), \u0022, \u0022.join(group), \u0022; wszyscy od %s\u0022 % since.pop() if len(since) == 1 else \u0022\u0022,\r\n                \u0022, ten sam handlowiec %s\u0022 % reps.pop() if len(reps) == 1 else \u0022\u0022))\r\n        if report.behaviour_rows:\r\n            lines.append(\u0022%d klient\u00F3w w ostatnim miesi\u0105cu zamawia kilka razy wi\u0119cej ni\u017C zwykle: %s.\u0022 % (\r\n                len(report.behaviour_rows),\r\n                \u0022, \u0022.join(\u0022%s (\u00D7%s)\u0022 % (r[\u0022Klient\u0022].split(\u0022 \u0022)[0], f.num(r[\u0022Krotno\u015B\u0107\u0022], 1)) for r in report.behaviour_rows)))\r\n        return lines\r\n",
+        "maxInputNumber": 1,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "AnomalyNarrator.md",
+        "nodeCathegory": 3,
+        "id": 51,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 1,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 85,
+            "title": "formatter",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 85,
+              "title": "formatter",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 86,
+            "title": "narrator",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 86,
+              "title": "narrator",
+              "connecttionType": 0
+            }
+          ],
+          "description": "AnomalyNarrator",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "AnomalyNarrator",
+        "targetPath": ""
+      },
+      "locationX": 900,
+      "locationY": 550
+    },
+    {
+      "nodeData": {
+        "codeText": "# CatNip Interactive Report \u2014 generated from the block\u0027s page (markup, Python, style).\n# Edit it in the block\u0027s editor: this file is rewritten whenever the editor is saved.\nimport base64 as _ir_base64\nimport html as _ir_html\nimport io as _ir_io\nimport json as _ir_json_module\nimport math as _ir_math\nimport os as _ir_os\nimport sys as _ir_sys\nimport threading as _ir_threading\nimport traceback as _ir_traceback\nimport uuid as _ir_uuid\n\n\nclass PodejrzaneZamowienia:\n    TITLE = \u0027Kt\u00F3re zam\u00F3wienia s\u0105 podejrzane?\u0027\n    HEIGHT = 1900\n    KEEP_ALIVE = True\n    ACTIONS = {\u0027eksport\u0027: \u0027live\u0027}\n    CATNIP_LIVE_ACTIONS = (\u0027eksport\u0027, )\n    MARKUP = (\n        \u0027\u003Cdiv class=\u0022cn-page\u0022\u003E\\n\u0027\n        \u0027  \u003Ch1\u003EKt\u00F3re zam\u00F3wienia s\u0105 podejrzane?\u003C/h1\u003E\\n\u0027\n        \u0027  \u003Cp class=\u0022cn-muted\u0022\u003E{source_note} \u00B7 zam\u00F3wienia (CSV) \u002B klienci (JSON) \u002B produkty (Excel) \u2192 Data Scan \u2192 regu\u0142y \u002B wzorce klient\u00F3w \u2192 lista do sprawdzenia\u003C/p\u003E\\n\u0027\n        \u0027\\n\u0027\n        \u0027  \u003Cdiv class=\u0022cn-grid-4\u0022\u003E\\n\u0027\n        \u0027    {self._kpi(\u0022Przejrzane zam\u00F3wienia\u0022, f.num(r.total_orders), \u0022w \u0022 \u002B f.num(r.seconds, 1) \u002B \u0022 s\u0022)}\\n\u0027\n        \u0027    {self._kpi(\u0022Do sprawdzenia\u0022, str(r.flagged_count), f.pct(100 * r.flagged_count / r.total_orders, 4) \u002B \u0022 wszystkich\u0022, -r.flagged_count)}\\n\u0027\n        \u0027    {self._kpi(\u0022Klienci do sprawdzenia\u0022, str(r.customer_count), \u0022klony i nag\u0142e zmiany\u0022, -r.customer_count)}\\n\u0027\n        \u0027    {self._kpi(\u0022Strata na cenach poni\u017Cej kosztu\u0022, f.zl(loss), \u0022warto\u015B\u0107 podejrzanych: \u0022 \u002B f.short_zl(r.flagged_value), -loss)}\\n\u0027\n        \u0027  \u003C/div\u003E\\n\u0027\n        \u0027\\n\u0027\n        \u0027  \u003Cdiv class=\u0022cn-grid-2\u0022\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-card answer\u0022\u003E\\n\u0027\n        \u0027      \u003Ch3\u003EOdpowied\u017A\u003C/h3\u003E\\n\u0027\n        \u0027      \u003Cp class=\u0022headline\u0022\u003E{headline}\u003C/p\u003E\\n\u0027\n        \u0027      {findings_html}\\n\u0027\n        \u0027      {button(\u0022Zapisz list\u0119 do CSV\u0022, action=\u0022eksport\u0022)}\\n\u0027\n        \u0027    \u003C/div\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-card\u0022\u003E\\n\u0027\n        \u0027      \u003Ch3\u003ETrafienia regu\u0142\u003C/h3\u003E\\n\u0027\n        \u0027      {rule_chart}\\n\u0027\n        \u0027    \u003C/div\u003E\\n\u0027\n        \u0027  \u003C/div\u003E\\n\u0027\n        \u0027\\n\u0027\n        \u0027  \u003Cdiv class=\u0022cn-card\u0022\u003E\\n\u0027\n        \u0027    \u003Ch3\u003EZam\u00F3wienia do sprawdzenia\u003C/h3\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-row\u0022\u003E{select(\u0022rule\u0022, rule_options, label=\u0022Poka\u017C\u0022)}\u003C/div\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-grid-2 wide-left\u0022\u003E\\n\u0027\n        \u0027      \u003Cdiv\u003E{table(flagged_rows, page_size=12, select=\u0022chosen\u0022, id=\u0022flagged\u0022)}\u003C/div\u003E\\n\u0027\n        \u0027      \u003Cdiv class=\u0022cn-card\u0022\u003E{chosen_html}\u003C/div\u003E\\n\u0027\n        \u0027    \u003C/div\u003E\\n\u0027\n        \u0027  \u003C/div\u003E\\n\u0027\n        \u0027\\n\u0027\n        \u0027  \u003Cdiv class=\u0022cn-grid-2\u0022\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-card\u0022\u003E\u003Ch3\u003EKto stoi za podejrzanymi cenami i rabatami?\u003C/h3\u003E{rep_chart}\u003C/div\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-card\u0022\u003E\\n\u0027\n        \u0027      \u003Ch3\u003EKlienci o identycznym wzorcu zakup\u00F3w\u003C/h3\u003E\\n\u0027\n        \u0027      {table(r.similar_rows, filter=False, id=\u0022clones\u0022)}\\n\u0027\n        \u0027      \u003Ch3\u003ENag\u0142a zmiana zachowania\u003C/h3\u003E\\n\u0027\n        \u0027      {table(r.behaviour_rows, filter=False, id=\u0022behaviour\u0022)}\\n\u0027\n        \u0027    \u003C/div\u003E\\n\u0027\n        \u0027  \u003C/div\u003E\\n\u0027\n        \u0027\\n\u0027\n        \u0027  \u003Cdiv class=\u0022cn-card\u0022\u003E\\n\u0027\n        \u0027    \u003Ch3\u003EData Scan \u2014 co CatNip rozpozna\u0142 w danych\u003C/h3\u003E\\n\u0027\n        \u0027    \u003Cdiv class=\u0022cn-grid-2\u0022\u003E\\n\u0027\n        \u0027      \u003Cpre class=\u0022scan\u0022\u003E{scan_tree}\u003C/pre\u003E\\n\u0027\n        \u0027      \u003Cdiv\u003E\\n\u0027\n        \u0027        \u003Cp\u003E\u003Cb\u003EPowi\u0105zania wykryte automatycznie\u003C/b\u003E\u003C/p\u003E\\n\u0027\n        \u0027        {relations_html}\\n\u0027\n        \u0027        \u003Cp\u003E\u003Cb\u003EPipeline\u003C/b\u003E\u003C/p\u003E\\n\u0027\n        \u0027        {table(pipeline_rows, filter=False, sortable=False, page_size=15, id=\u0022pipeline\u0022)}\\n\u0027\n        \u0027      \u003C/div\u003E\\n\u0027\n        \u0027    \u003C/div\u003E\\n\u0027\n        \u0027  \u003C/div\u003E\\n\u0027\n        \u0027\u003C/div\u003E\\n\u0027\n        \u0027\u0027\n    )\n    STYLE = (\n        \u0027.cn-page h1 { margin-bottom: 2px; }\\n\u0027\n        \u0027.cn-card h3 { margin-top: 0; }\\n\u0027\n        \u0027.answer .headline { font-size: 1.15em; font-weight: 600; }\\n\u0027\n        \u0027.answer ol, .answer ul { margin-top: 4px; padding-left: 22px; }\\n\u0027\n        \u0027.answer li { margin: 3px 0; }\\n\u0027\n        \u0027pre.scan { font-size: 0.82em; line-height: 1.35; max-height: 420px; overflow: auto; background: rgba(127,127,127,0.08); padding: 10px; border-radius: 6px; }\\n\u0027\n        \u0027.cn-kpi-value { font-size: 1.35em; }\\n\u0027\n        \u0027.flag { display: inline-block; padding: 1px 6px; margin: 1px; border-radius: 4px; font-size: 0.85em; background: rgba(220,57,18,0.12); }\\n\u0027\n        \u0027.wide-left { grid-template-columns: 2fr 1fr; }\\n\u0027\n        \u0027table.detail td { padding: 2px 8px 2px 0; vertical-align: top; }\\n\u0027\n        \u0027\u0027\n    )\n\n    def __init__(self, findings=None, narrator=None, formatter=None):\n        self.findings = findings\n        self.narrator = narrator\n        self.formatter = formatter\n        self.data = findings\n        _ir_init(self, {\u0027findings\u0027: findings, \u0027narrator\u0027: narrator, \u0027formatter\u0027: formatter})\n\n    def show(self):\n        \u0022\u0022\u0022Shows the page in the Run Engine\u0027s Output tab, or updates it when it is already there.\u0022\u0022\u0022\n        return _ir_show(self)\n\n    def eksport(self):\n        \u0022\u0022\u0022Live action: the blocks wired to this output run again on every click. Zapisuje list\u0119 podejrzanych zam\u00F3wie\u0144 do output/ jako CSV dla Excela.\u0022\u0022\u0022\n        return _ir_wait(self, \u0027eksport\u0027)\n\n    def set(self, name, value, refresh=False):\n        \u0022\u0022\u0022Sets a state value; the markup sees it by name. refresh=True renders the page again.\u0022\u0022\u0022\n        self.state[name] = value\n        if refresh:\n            self.refresh()\n\n    def get(self, name, default=None):\n        \u0022\u0022\u0022A state value \u2014 what a control bound to that name holds.\u0022\u0022\u0022\n        return self.state.get(name, default)\n\n    def values(self):\n        \u0022\u0022\u0022A copy of the page\u0027s state.\u0022\u0022\u0022\n        return dict(self.state)\n\n    def refresh(self):\n        \u0022\u0022\u0022Renders the page again and sends it to the Run Engine.\u0022\u0022\u0022\n        if self._ir[\u0027shown\u0027] and not self._ir[\u0027closed\u0027]:\n            _ir_push(self)\n\n    def toast(self, message, kind=\u0027info\u0027):\n        \u0022\u0022\u0022A short message over the page; kind is info, success, warning or error.\u0022\u0022\u0022\n        if self._ir[\u0027shown\u0027] and not self._ir[\u0027closed\u0027] and _ir_engine():\n            _ir_send({\u0027op\u0027: \u0027toast\u0027, \u0027id\u0027: self._ir[\u0027id\u0027], \u0027message\u0027: str(message), \u0027kind\u0027: kind})\n        else:\n            print(\u0027[%s] %s\u0027 % (kind, message), flush=True)\n\n    def close(self):\n        \u0022\u0022\u0022Closes the page; once every page is closed the run may end.\u0022\u0022\u0022\n        _ir_close(self)\n\n    def bind_action(self, name, handler):\n        \u0022\u0022\u0022Calls handler(values) on every click of the action\u0027s button \u2014 what the generated main does with a live action.\u0022\u0022\u0022\n        _ir_bind(self, name, handler)\n\n    # \u2500\u2500 The Python tab \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    def setup(self):\n        self.set(\u0022rule\u0022, \u0022Wszystkie regu\u0142y\u0022)\n\n    def prepare(self):\n        r = self.findings\n        f = self.formatter\n        rule = self.get(\u0022rule\u0022) or \u0022Wszystkie regu\u0142y\u0022\n        flagged = r.flagged if rule == \u0022Wszystkie regu\u0142y\u0022 else r.flagged[r.flagged[\u0022Powody\u0022].str.contains(rule, regex=False)]\n        chosen = self.get(\u0022chosen\u0022)\n        return {\n            \u0022r\u0022: r,\n            \u0022f\u0022: f,\n            \u0022headline\u0022: self.narrator.headline(r),\n            \u0022findings_html\u0022: html(\u0022\u003Cul\u003E%s\u003C/ul\u003E\u0022 % \u0022\u0022.join(\u0022\u003Cli\u003E%s\u003C/li\u003E\u0022 % esc(line) for line in self.narrator.findings(r))),\n            \u0022rule_options\u0022: [\u0022Wszystkie regu\u0142y\u0022] \u002B [row[\u0022Regu\u0142a\u0022] for row in r.rule_rows],\n            \u0022flagged_rows\u0022: flagged,\n            \u0022rule_chart\u0022: self._rule_chart(r),\n            \u0022rep_chart\u0022: self._rep_chart(r),\n            \u0022chosen_html\u0022: self._chosen_html(chosen),\n            \u0022loss\u0022: float(r.flagged[\u0022Strata\u0022].sum()),\n            \u0022scan_tree\u0022: r.scan.tree_text(),\n            \u0022relations_html\u0022: html(\u0022\u003Cul\u003E%s\u003C/ul\u003E\u0022 % \u0022\u0022.join(\u0022\u003Cli\u003E%s\u003C/li\u003E\u0022 % esc(x) for x in r.scan.relations())),\n            \u0022pipeline_rows\u0022: r.scan.pipeline_rows(),\n            \u0022source_note\u0022: \u0022dane demonstracyjne wygenerowane przed chwil\u0105 w input/\u0022 if r.demo else \u0022dane z folderu input/\u0022,\n        }\n\n    def _rule_chart(self, r):\n        rows = sorted(r.rule_rows, key=lambda row: row[\u0022Zam\u00F3wienia\u0022])\n        return chart(\u0022barh\u0022, rows, x=\u0022Regu\u0142a\u0022, y=\u0022Zam\u00F3wienia\u0022, height=300, colors=[\u0022#d9534f\u0022], text=\u0022Zam\u00F3wienia\u0022,\n                     layout={\u0022margin\u0022: {\u0022l\u0022: 170, \u0022r\u0022: 20, \u0022t\u0022: 20, \u0022b\u0022: 40}})\n\n    def _rep_chart(self, r):\n        rows = r.rep_rows[:8]\n        if not rows:\n            return html(\u0022\u003Cp class=\u0027cn-muted\u0027\u003EBrak podejrzanych cen i rabat\u00F3w.\u003C/p\u003E\u0022)\n        return chart(\u0022bar\u0022, rows, x=\u0022Handlowiec\u0022, y=[\u0022Udzia\u0142 w podejrzanych %\u0022, \u0022Udzia\u0142 we wszystkich zam\u00F3wieniach %\u0022],\n                     height=300, colors=[\u0022#d9534f\u0022, \u0022#9aa5b1\u0022], y_title=\u0022%\u0022)\n\n    def _chosen_html(self, chosen):\n        if not chosen:\n            return html(\u0022\u003Cp class=\u0027cn-muted\u0027\u003EKliknij wiersz tabeli, \u017Ceby zobaczy\u0107 szczeg\u00F3\u0142y zam\u00F3wienia.\u003C/p\u003E\u0022)\n        reasons = \u0022\u0022.join(\u0022\u003Cspan class=\u0027flag\u0027\u003E%s\u003C/span\u003E\u0022 % esc(x.strip()) for x in str(chosen.get(\u0022Powody\u0022, \u0022\u0022)).split(\u0022,\u0022))\n        fields = \u0022\u0022.join(\u0022\u003Ctr\u003E\u003Ctd\u003E%s\u003C/td\u003E\u003Ctd\u003E\u003Cb\u003E%s\u003C/b\u003E\u003C/td\u003E\u003C/tr\u003E\u0022 % (esc(k), esc(v)) for k, v in chosen.items() if k != \u0022Powody\u0022)\n        return html(\u0022\u003Cp\u003E%s\u003C/p\u003E\u003Ctable class=\u0027detail\u0027\u003E%s\u003C/table\u003E\u0022 % (reasons, fields))\n\n    def on_eksport(self, values):\n        self.toast(\u0022Zapisuj\u0119 %d zam\u00F3wie\u0144 do output/\u2026\u0022 % self.findings.flagged_count, \u0022info\u0022)\n        return self.findings\n\n    def _kpi(self, label, value, delta=None, change=0.0, good_up=True):\n        \u0022\u0022\u0022Kafelek KPI: strza\u0142ka i kolor bior\u0105 si\u0119 z liczby change, a opis zmiany (delta) jest ju\u017C po polsku.\u0022\u0022\u0022\n        extra = \u0022\u0022\n        if delta is not None:\n            tone = \u0022cn-good\u0022 if (change \u003E= 0) == good_up else \u0022cn-bad\u0022\n            arrow = \u0022\u25B2\u0022 if change \u003E 0 else (\u0022\u25BC\u0022 if change \u003C 0 else \u0022\u2022\u0022)\n            extra = \u0027\u003Cdiv class=\u0022cn-kpi-delta %s\u0022\u003E%s %s\u003C/div\u003E\u0027 % (tone, arrow, esc(delta))\n        return html(\u0027\u003Cdiv class=\u0022cn-kpi\u0022\u003E\u003Cdiv class=\u0022cn-kpi-label\u0022\u003E%s\u003C/div\u003E\u003Cdiv class=\u0022cn-kpi-value\u0022\u003E%s\u003C/div\u003E%s\u003C/div\u003E\u0027\n                    % (esc(label), esc(value), extra))\n\n\n# \u2500\u2500 CatNip interactive report runtime \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n# Generated with the class above; everything here is shared by every interactive report of a\n# process through one hub, so two reports on one page of output never fight over stdin.\n#\n# The page lives in CatNip\u0027s Run Engine. It reaches this process as lines on stdin\n# (__CATNIP_UI__ {json}) and this process answers through the ordinary visual stream\n# (__VISUAL_START__ {\u0022type\u0022: \u0022interactive\u0022, ...} __VISUAL_END__) \u2014 the two channels every kind of\n# run already has, locally, in Docker, in a compiled executable and on the CatNip Server.\n\n_IR_PREFIX = \u0027__CATNIP_UI__\u0027\n_IR_LOCAL = _ir_threading.local()\n\n\nclass Html(str):\n    \u0022\u0022\u0022Text that goes into the page as HTML instead of being escaped.\u0022\u0022\u0022\n    __slots__ = ()\n\n    def __html__(self):\n        return str(self)\n\n\ndef html(text):\n    \u0022\u0022\u0022Marks text as HTML, to be inserted as it is.\u0022\u0022\u0022\n    return Html(\u0027\u0027 if text is None else text)\n\n\ndef esc(value):\n    \u0022\u0022\u0022Escapes a value for the page.\u0022\u0022\u0022\n    return _ir_html.escape(\u0027\u0027 if value is None else str(value), quote=True)\n\n\ndef fmt(value, spec=None):\n    \u0022\u0022\u0022Formats a value with a format spec (\u0027,.2f\u0027, \u0027.1%\u0027, ...); None reads as empty.\u0022\u0022\u0022\n    if value is None:\n        return \u0027\u0027\n    if not spec:\n        return str(value)\n    try:\n        return format(value, spec)\n    except (TypeError, ValueError):\n        return str(value)\n\n\n# \u2500\u2500 The hub: one per process \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ndef _ir_hub():\n    hub = getattr(_ir_sys, \u0027_catnip_interactive_hub\u0027, None)\n    if hub is None:\n        hub = {\n            \u0027pages\u0027: {},\n            \u0027lock\u0027: _ir_threading.RLock(),\n            \u0027out\u0027: _ir_threading.Lock(),\n            \u0027reader\u0027: None,\n            \u0027keeper\u0027: None,\n            \u0027closed\u0027: _ir_threading.Event(),\n            \u0027eof\u0027: False,\n        }\n        setattr(_ir_sys, \u0027_catnip_interactive_hub\u0027, hub)\n    return hub\n\n\ndef _ir_engine():\n    \u0022\u0022\u0022True when a CatNip engine is listening on the other end of stdout and stdin.\u0022\u0022\u0022\n    env = _ir_os.environ\n    return bool(env.get(\u0027CATNIP_MAIN_PY\u0027) or env.get(\u0027CATNIP_SCRIPT\u0027)\n                or env.get(\u0027CATNIP_ENGINE\u0027) or env.get(\u0027CATNIP_INTERACTIVE\u0027))\n\n\ndef _ir_plain(value):\n    \u0022\u0022\u0022A value JSON can carry: numpy scalars, dates, decimals and the like are reduced to one.\u0022\u0022\u0022\n    if value is None or isinstance(value, (bool, int, str)):\n        return value\n    if isinstance(value, float):\n        return value if _ir_math.isfinite(value) else None\n    if isinstance(value, (list, tuple)):\n        return [_ir_plain(v) for v in value]\n    if isinstance(value, dict):\n        return {str(k): _ir_plain(v) for k, v in value.items()}\n    if hasattr(value, \u0027item\u0027) and not hasattr(value, \u0027__len__\u0027):\n        try:\n            return _ir_plain(value.item())\n        except Exception:\n            pass\n    if hasattr(value, \u0027tolist\u0027):\n        try:\n            return _ir_plain(value.tolist())\n        except Exception:\n            pass\n    if hasattr(value, \u0027isoformat\u0027):\n        try:\n            return value.isoformat()\n        except Exception:\n            pass\n    try:\n        import decimal\n        if isinstance(value, decimal.Decimal):\n            return float(value)\n    except Exception:\n        pass\n    return str(value)\n\n\ndef _ir_json(value):\n    return _ir_json_module.dumps(_ir_plain(value), separators=(\u0027,\u0027, \u0027:\u0027), ensure_ascii=False)\n\n\ndef _ir_send(message):\n    body = _ir_json(message).encode(\u0027utf-8\u0027)\n    payload = _ir_json_module.dumps({\n        \u0027type\u0027: \u0027interactive\u0027,\n        \u0027title\u0027: message.get(\u0027title\u0027, \u0027\u0027),\n        \u0027data\u0027: _ir_base64.b64encode(body).decode(\u0027ascii\u0027),\n    })\n    with _ir_hub()[\u0027out\u0027]:\n        _ir_sys.stdout.write(\u0027__VISUAL_START__\u0027 \u002B payload \u002B \u0027__VISUAL_END__\\n\u0027)\n        _ir_sys.stdout.flush()\n\n\ndef _ir_register(page, keep_alive):\n    hub = _ir_hub()\n    with hub[\u0027lock\u0027]:\n        hub[\u0027pages\u0027][page._ir[\u0027id\u0027]] = page\n        if hub[\u0027eof\u0027]:\n            return\n        if hub[\u0027reader\u0027] is None:\n            hub[\u0027reader\u0027] = _ir_threading.Thread(target=_ir_read_loop, name=\u0027catnip-interactive\u0027, daemon=True)\n            hub[\u0027reader\u0027].start()\n        # The keeper is what keeps the process alive after the flow finished: the reader is a\n        # daemon thread and would die with the main one.\n        if keep_alive and hub[\u0027keeper\u0027] is None:\n            hub[\u0027keeper\u0027] = _ir_threading.Thread(target=hub[\u0027closed\u0027].wait, name=\u0027catnip-interactive-keeper\u0027)\n            hub[\u0027keeper\u0027].start()\n\n\ndef _ir_unregister(page_id):\n    hub = _ir_hub()\n    with hub[\u0027lock\u0027]:\n        hub[\u0027pages\u0027].pop(page_id, None)\n        if not hub[\u0027pages\u0027]:\n            hub[\u0027closed\u0027].set()\n\n\ndef _ir_read_loop():\n    hub = _ir_hub()\n    stream = _ir_sys.stdin\n    while True:\n        try:\n            line = stream.readline() if stream is not None else \u0027\u0027\n        except Exception:\n            line = \u0027\u0027\n        if not line:\n            # Nobody will ever answer again (the run was stopped, or nothing was attached):\n            # whoever is waiting for a click must be let go, and the process may end.\n            with hub[\u0027lock\u0027]:\n                hub[\u0027eof\u0027] = True\n                pages = list(hub[\u0027pages\u0027].values())\n            for page in pages:\n                _ir_release_waiters(page)\n            hub[\u0027closed\u0027].set()\n            return\n        line = line.strip()\n        if not line.startswith(_IR_PREFIX):\n            continue\n        try:\n            message = _ir_json_module.loads(line[len(_IR_PREFIX):])\n        except ValueError:\n            continue\n        with hub[\u0027lock\u0027]:\n            page = hub[\u0027pages\u0027].get(message.get(\u0027page\u0027))\n        if page is None:\n            continue\n        try:\n            _ir_dispatch(page, message)\n        except Exception:\n            _ir_traceback.print_exc()\n\n\n# \u2500\u2500 A page \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ndef _ir_init(page, inputs):\n    page.state = {}\n    page._ir = {\n        \u0027id\u0027: _ir_uuid.uuid4().hex,\n        \u0027shown\u0027: False,\n        \u0027closed\u0027: False,\n        \u0027bindings\u0027: {},\n        \u0027waiters\u0027: {},\n        \u0027pending\u0027: {},\n        \u0027controls\u0027: {},\n        \u0027counter\u0027: 0,\n        \u0027inputs\u0027: inputs,\n        \u0027lock\u0027: _ir_threading.RLock(),\n    }\n    setup = getattr(page, \u0027setup\u0027, None)\n    if callable(setup):\n        setup()\n\n\ndef _ir_show(page):\n    ir = page._ir\n    if ir[\u0027closed\u0027]:\n        return None\n    if not _ir_engine():\n        print(\u0027[CatNip] %s: an interactive report is shown by the CatNip Run Engine; \u0027\n              \u0027outside it there is no page to show.\u0027 % type(page).TITLE, flush=True)\n        return None\n    if _ir_sys.gettrace() is not None:\n        # A debugger reads stdin too, and the page would steal its commands.\n        print(\u0027[CatNip] %s: the page stays static while debugging.\u0027 % type(page).TITLE, flush=True)\n        ir[\u0027shown\u0027] = True\n        _ir_push(page, interactive=False)\n        return None\n    ir[\u0027shown\u0027] = True\n    _ir_register(page, type(page).KEEP_ALIVE)\n    _ir_push(page)\n    return None\n\n\ndef _ir_push(page, interactive=True):\n    \u0022\u0022\u0022Renders the page and sends it; the Run Engine replaces the card with the same id.\u0022\u0022\u0022\n    cls = type(page)\n    try:\n        body = _ir_render(page)\n    except Exception as ex:\n        _ir_traceback.print_exc()\n        body = \u0027\u003Cdiv class=\u0022cn-error-page\u0022\u003E\u003Cb\u003EThe page could not be rendered.\u003C/b\u003E\u003Cpre\u003E%s\u003C/pre\u003E\u003C/div\u003E\u0027 % esc(\n            \u0027%s: %s\u0027 % (type(ex).__name__, ex))\n    _ir_send({\n        \u0027op\u0027: \u0027render\u0027,\n        \u0027id\u0027: page._ir[\u0027id\u0027],\n        \u0027title\u0027: cls.TITLE,\n        \u0027height\u0027: cls.HEIGHT,\n        \u0027css\u0027: cls.STYLE,\n        \u0027html\u0027: body,\n        \u0027interactive\u0027: interactive,\n        \u0027actions\u0027: dict(cls.ACTIONS),\n    })\n\n\ndef _ir_namespace(page):\n    namespace = dict(globals())\n    prepare = getattr(page, \u0027prepare\u0027, None)\n    extra = prepare() if callable(prepare) else None\n    namespace.update(page.state)\n    for name, value in page._ir[\u0027inputs\u0027].items():\n        namespace[name] = getattr(page, name, value)\n    namespace.update({\u0027self\u0027: page, \u0027state\u0027: page.state, \u0027data\u0027: page.data, \u0027title\u0027: type(page).TITLE})\n    if isinstance(extra, dict):\n        namespace.update(extra)\n    return namespace\n\n\ndef _ir_render(page):\n    with page._ir[\u0027lock\u0027]:\n        page._ir[\u0027counter\u0027] = 0\n        page._ir[\u0027controls\u0027] = {}\n        previous = (getattr(_IR_LOCAL, \u0027page\u0027, None), getattr(_IR_LOCAL, \u0027namespace\u0027, None))\n        _IR_LOCAL.page = page\n        _IR_LOCAL.namespace = None\n        try:\n            namespace = _ir_namespace(page)\n            # A control placed further up gives its state value a default as it renders; the holes\n            # below it must see that value, so the namespace is shared with _ir_default.\n            _IR_LOCAL.namespace = namespace\n            return _ir_template(type(page).MARKUP, namespace)\n        finally:\n            _IR_LOCAL.page, _IR_LOCAL.namespace = previous\n\n\ndef _ir_current():\n    page = getattr(_IR_LOCAL, \u0027page\u0027, None)\n    if page is None:\n        raise RuntimeError(\u0027controls, charts and tables are placed from the markup, while the page renders\u0027)\n    return page\n\n\ndef _ir_next_id(prefix):\n    page = getattr(_IR_LOCAL, \u0027page\u0027, None)\n    if page is None:\n        return \u0027cn-%s-%s\u0027 % (prefix, _ir_uuid.uuid4().hex[:8])\n    page._ir[\u0027counter\u0027] \u002B= 1\n    return \u0027cn-%s-%d\u0027 % (prefix, page._ir[\u0027counter\u0027])\n\n\ndef _ir_dispatch(page, message):\n    op = message.get(\u0027op\u0027)\n    if op == \u0027ready\u0027:\n        _ir_push(page)\n        return\n    if op == \u0027close\u0027:\n        _ir_close(page, notify=False)\n        return\n    if op == \u0027change\u0027:\n        name = str(message.get(\u0027name\u0027) or \u0027\u0027)\n        if not name:\n            return\n        value = message.get(\u0027value\u0027)\n        page.state[name] = value\n        hook = getattr(page, \u0027on_%s_change\u0027 % name, None)\n        if callable(hook):\n            _ir_guard(page, hook, value)\n        else:\n            hook = getattr(page, \u0027on_change\u0027, None)\n            if callable(hook):\n                _ir_guard(page, hook, name, value)\n        _ir_push(page)\n        return\n    if op == \u0027call\u0027:\n        name = str(message.get(\u0027name\u0027) or \u0027\u0027)\n        method = getattr(page, name, None) if name and not name.startswith(\u0027_\u0027) else None\n        if callable(method):\n            _ir_guard(page, method)\n        else:\n            page.toast(\u0027The page has no method called %s.\u0027 % name, \u0027error\u0027)\n        _ir_push(page)\n        return\n    if op == \u0027action\u0027:\n        _ir_fire(page, str(message.get(\u0027name\u0027) or \u0027\u0027))\n\n\ndef _ir_guard(page, func, *args):\n    try:\n        return func(*args)\n    except Exception as ex:\n        _ir_traceback.print_exc()\n        page.toast(\u0027%s: %s\u0027 % (type(ex).__name__, ex), \u0027error\u0027)\n        return None\n\n\ndef _ir_payload(page, name):\n    values = dict(page.state)\n    hook = getattr(page, \u0027on_\u0027 \u002B name, None)\n    if callable(hook):\n        result = hook(values)\n        if result is not None:\n            return result\n    return values\n\n\ndef _ir_fire(page, name):\n    ir = page._ir\n    if name not in type(page).ACTIONS:\n        page.toast(\u0027The page has no action called %s.\u0027 % name, \u0027error\u0027)\n        return\n    with ir[\u0027lock\u0027]:\n        waiter = ir[\u0027waiters\u0027].pop(name, None)\n        binding = ir[\u0027bindings\u0027].get(name)\n    try:\n        payload = _ir_payload(page, name)\n    except Exception as ex:\n        _ir_traceback.print_exc()\n        page.toast(\u0027%s: %s\u0027 % (type(ex).__name__, ex), \u0027error\u0027)\n        return\n    if waiter is not None:\n        waiter[\u0027payload\u0027] = payload\n        waiter[\u0027event\u0027].set()\n        return\n    if (binding is None and type(page).ACTIONS.get(name) == \u0027live\u0027\n            and _ir_threading.main_thread().is_alive()\n            and _ir_os.environ.get(\u0027CATNIP_INTERACTIVE\u0027) != \u0027preview\u0027):\n        # The generated main binds live actions after the rest of the flow has been called, and\n        # the flow may still be on its way there (waiting at a submit, say): the click is kept\n        # and handled the moment the binding arrives.\n        with ir[\u0027lock\u0027]:\n            ir[\u0027pending\u0027][name] = payload\n        page.toast(\u0027\u0022%s\u0022 runs as soon as the flow reaches it.\u0027 % name, \u0027info\u0027)\n        return\n    if binding is None:\n        if _ir_os.environ.get(\u0027CATNIP_INTERACTIVE\u0027) == \u0027preview\u0027:\n            page.toast(\u0027%s would hand over: %s\u0027 % (name, _ir_json(payload)[:400]), \u0027info\u0027)\n        else:\n            page.toast(\u0027Nothing is waiting for \u0022%s\u0022 \u2014 connect a block to its output and run the generated main.\u0027 % name, \u0027warning\u0027)\n        return\n    _ir_run_binding(page, name, binding, payload)\n\n\ndef _ir_run_binding(page, name, binding, payload):\n    ir = page._ir\n    _ir_send({\u0027op\u0027: \u0027busy\u0027, \u0027id\u0027: ir[\u0027id\u0027], \u0027on\u0027: True, \u0027label\u0027: name})\n    try:\n        _ir_guard(page, binding, payload)\n    finally:\n        _ir_send({\u0027op\u0027: \u0027busy\u0027, \u0027id\u0027: ir[\u0027id\u0027], \u0027on\u0027: False})\n        _ir_push(page)\n\n\ndef _ir_bind(page, name, handler):\n    ir = page._ir\n    with ir[\u0027lock\u0027]:\n        ir[\u0027bindings\u0027][name] = handler\n        pending = ir[\u0027pending\u0027].pop(name, None)\n    if pending is not None:\n        _ir_run_binding(page, name, handler, pending)\n\n\ndef _ir_wait(page, name):\n    \u0022\u0022\u0022The output of a submit action: shows the page if it is not shown, then waits for the click.\u0022\u0022\u0022\n    ir = page._ir\n    if not ir[\u0027shown\u0027]:\n        page.show()\n    hub = _ir_hub()\n    if ir[\u0027closed\u0027] or not _ir_engine() or hub[\u0027eof\u0027] or _ir_sys.gettrace() is not None:\n        # Nobody can click: carry on with what the page holds.\n        return _ir_payload(page, name)\n    waiter = {\u0027event\u0027: _ir_threading.Event(), \u0027payload\u0027: None}\n    with ir[\u0027lock\u0027]:\n        ir[\u0027waiters\u0027][name] = waiter\n    _ir_send({\u0027op\u0027: \u0027waiting\u0027, \u0027id\u0027: ir[\u0027id\u0027], \u0027action\u0027: name})\n    waiter[\u0027event\u0027].wait()\n    _ir_send({\u0027op\u0027: \u0027waiting\u0027, \u0027id\u0027: ir[\u0027id\u0027], \u0027action\u0027: None})\n    return waiter[\u0027payload\u0027]\n\n\ndef _ir_release_waiters(page):\n    with page._ir[\u0027lock\u0027]:\n        waiters = list(page._ir[\u0027waiters\u0027].values())\n        page._ir[\u0027waiters\u0027].clear()\n    for waiter in waiters:\n        waiter[\u0027event\u0027].set()\n\n\ndef _ir_close(page, notify=True):\n    ir = page._ir\n    if ir[\u0027closed\u0027]:\n        return\n    ir[\u0027closed\u0027] = True\n    _ir_release_waiters(page)\n    if notify and ir[\u0027shown\u0027]:\n        _ir_send({\u0027op\u0027: \u0027close\u0027, \u0027id\u0027: ir[\u0027id\u0027]})\n    _ir_unregister(ir[\u0027id\u0027])\n\n\n# \u2500\u2500 The template: HTML with {python} holes \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n_IR_COMPILED = {}\n\n\ndef _ir_template(text, namespace):\n    out = []\n    i = 0\n    n = len(text)\n    lower = text.lower()\n    while i \u003C n:\n        c = text[i]\n        if c == \u0027\u003C\u0027 and (lower.startswith(\u0027\u003Cscript\u0027, i) or lower.startswith(\u0027\u003Cstyle\u0027, i)):\n            # Script and style blocks are copied as they are: their braces are not holes.\n            tag = \u0027script\u0027 if lower.startswith(\u0027\u003Cscript\u0027, i) else \u0027style\u0027\n            end = lower.find(\u0027\u003C/\u0027 \u002B tag, i)\n            end = n if end \u003C 0 else lower.find(\u0027\u003E\u0027, end) \u002B 1 or n\n            out.append(text[i:end])\n            i = end\n            continue\n        if c == \u0027{\u0027:\n            if text.startswith(\u0027{{\u0027, i):\n                out.append(\u0027{\u0027)\n                i \u002B= 2\n                continue\n            close = _ir_matching(text, i)\n            if close \u003C 0:\n                out.append(text[i:])\n                break\n            out.append(_ir_hole(text[i \u002B 1:close], namespace))\n            i = close \u002B 1\n            continue\n        if c == \u0027}\u0027:\n            out.append(\u0027}\u0027)\n            i \u002B= 2 if text.startswith(\u0027}}\u0027, i) else 1\n            continue\n        nxt = min([p for p in (text.find(\u0027{\u0027, i), text.find(\u0027}\u0027, i), lower.find(\u0027\u003Cs\u0027, i)) if p \u003E= 0] or [n])\n        if nxt == i:\n            nxt = i \u002B 1\n        out.append(text[i:nxt])\n        i = nxt\n    return \u0027\u0027.join(out)\n\n\ndef _ir_matching(text, start):\n    \u0022\u0022\u0022The brace closing the one at start, skipping braces inside strings and nested brackets.\u0022\u0022\u0022\n    depth = 0\n    quote = None\n    i = start\n    while i \u003C len(text):\n        c = text[i]\n        if quote:\n            if c == \u0027\\\\\u0027:\n                i \u002B= 2\n                continue\n            if text.startswith(quote, i):\n                i \u002B= len(quote)\n                quote = None\n                continue\n        elif c in \u0027\\\u0027\u0022\u0027:\n            quote = c * 3 if text.startswith(c * 3, i) else c\n            i \u002B= len(quote)\n            continue\n        elif c in \u0027{[(\u0027:\n            depth \u002B= 1\n        elif c in \u0027}])\u0027:\n            depth -= 1\n            if depth == 0:\n                return i\n        i \u002B= 1\n    return -1\n\n\ndef _ir_hole(expression, namespace):\n    raw = expression.startswith(\u0027!\u0027)\n    source = expression[1:] if raw else expression\n    source = source.strip()\n    if not source:\n        return \u0027\u0027\n    try:\n        code = _IR_COMPILED.get(source)\n        if code is None:\n            code = compile(source, \u0027\u003Cmarkup {%s}\u003E\u0027 % source[:60], \u0027eval\u0027)\n            _IR_COMPILED[source] = code\n        value = eval(code, namespace)\n    except Exception as ex:\n        return \u0027\u003Cspan class=\u0022cn-error\u0022 title=\u0022%s\u0022\u003E{%s} \u2192 %s: %s\u003C/span\u003E\u0027 % (\n            esc(source), esc(source[:80]), esc(type(ex).__name__), esc(ex))\n    return _ir_value(value, raw)\n\n\ndef _ir_value(value, raw=False):\n    if value is None:\n        return \u0027\u0027\n    if hasattr(value, \u0027__html__\u0027):\n        return str(value.__html__())\n    if raw:\n        return str(value)\n    if hasattr(value, \u0027to_plotly_json\u0027):\n        return plotly(value)\n    if hasattr(value, \u0027savefig\u0027):\n        return figure(value)\n    if hasattr(value, \u0027columns\u0027) and hasattr(value, \u0027itertuples\u0027):\n        return table(value)\n    if isinstance(value, float):\n        return esc(_ir_number(value))\n    return esc(value)\n\n\ndef _ir_number(value):\n    if value != value:\n        return \u0027\u0027\n    if float(value).is_integer() and abs(value) \u003C 1e15:\n        return str(int(value))\n    return (\u0027%.6g\u0027 % value) if abs(value) \u003C 1e-4 or abs(value) \u003E= 1e15 else str(round(value, 6))\n\n\n# \u2500\u2500 Data shapes \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ndef _ir_table(rows, columns=None, limit=0):\n    \u0022\u0022\u0022(headers, rows of values) out of a DataFrame, numpy array, dict of columns, list of dicts\n    or list of rows \u2014 resolved when the page renders, so the data may change shape between runs.\u0022\u0022\u0022\n    if rows is None:\n        return [], []\n    limit = int(limit or 0)\n    if hasattr(rows, \u0027columns\u0027) and hasattr(rows, \u0027itertuples\u0027):\n        frame = rows[list(columns)] if columns else rows\n        if limit \u003E 0:\n            frame = frame.head(limit)\n        return [str(c) for c in frame.columns], [list(r) for r in frame.itertuples(index=False, name=None)]\n    if hasattr(rows, \u0027column_names\u0027) and hasattr(rows, \u0027to_pylist\u0027):          # pyarrow Table\n        return _ir_table(rows.to_pylist(), columns, limit)\n    if hasattr(rows, \u0027tolist\u0027) and not isinstance(rows, (list, tuple, dict)):\n        rows = rows.tolist()\n    if isinstance(rows, dict):\n        headers = [str(k) for k in (columns or rows.keys())]\n        cols = [rows.get(h, []) for h in headers]\n        cols = [c.tolist() if hasattr(c, \u0027tolist\u0027) else list(c) if hasattr(c, \u0027__iter__\u0027) and not isinstance(c, str) else [c] for c in cols]\n        length = max((len(c) for c in cols), default=0)\n        if limit \u003E 0:\n            length = min(length, limit)\n        return headers, [[c[i] if i \u003C len(c) else None for c in cols] for i in range(length)]\n    rows = list(rows)\n    if not rows:\n        return [str(c) for c in (columns or [])], []\n    if limit \u003E 0:\n        rows = rows[:limit]\n    if isinstance(rows[0], dict):\n        headers = [str(k) for k in (columns or rows[0].keys())]\n        return headers, [[row.get(h) for h in headers] for row in rows]\n    if hasattr(rows[0], \u0027_fields\u0027):                                            # namedtuple\n        headers = list(columns or rows[0]._fields)\n        return headers, [[getattr(row, h, None) for h in headers] for row in rows]\n    cells = [list(row) if hasattr(row, \u0027__iter__\u0027) and not isinstance(row, str) else [row] for row in rows]\n    width = max(len(r) for r in cells)\n    headers = [str(c) for c in columns] if columns else [\u0027Column %d\u0027 % (i \u002B 1) for i in range(width)]\n    return headers, cells\n\n\ndef rows_of(data, columns=None):\n    \u0022\u0022\u0022Any tabular shape as a list of dicts \u2014 the easiest form to compute with in a report.\u0022\u0022\u0022\n    if data is None:\n        return []\n    headers, cells = _ir_table(data, columns)\n    return [dict(zip(headers, row)) for row in cells]\n\n\ndef column(data, key):\n    \u0022\u0022\u0022One column of any tabular shape as a list; a sequence passed as the key comes back as a list.\u0022\u0022\u0022\n    if key is None:\n        return None\n    if not isinstance(key, str):\n        return key.tolist() if hasattr(key, \u0027tolist\u0027) else list(key)\n    if data is None:\n        raise KeyError(\u0027no data to take the column %r from\u0027 % key)\n    if hasattr(data, \u0027columns\u0027) and hasattr(data, \u0027itertuples\u0027):\n        return data[key].tolist()\n    if isinstance(data, dict):\n        values = data[key]\n        return values.tolist() if hasattr(values, \u0027tolist\u0027) else list(values)\n    headers, cells = _ir_table(data)\n    if key not in headers:\n        raise KeyError(\u0027no column %r \u2014 the data has %s\u0027 % (key, \u0027, \u0027.join(headers) or \u0027no columns\u0027))\n    index = headers.index(key)\n    return [row[index] if index \u003C len(row) else None for row in cells]\n\n\ndef _ir_data(data):\n    if data is None:\n        page = getattr(_IR_LOCAL, \u0027page\u0027, None)\n        return page.data if page is not None else None\n    return data\n\n\ndef _ir_attrs(**attributes):\n    parts = []\n    for key, value in attributes.items():\n        if value is None or value is False:\n            continue\n        key = key.rstrip(\u0027_\u0027).replace(\u0027_\u0027, \u0027-\u0027)\n        parts.append(key if value is True else \u0027%s=\u0022%s\u0022\u0027 % (key, esc(value)))\n    return \u0027 \u0027.join(parts)\n\n\ndef _ir_json_block(value):\n    return _ir_json(value).replace(\u0027\u003C/\u0027, \u0027\u003C\\\\/\u0027)\n\n\ndef _ir_label(label, for_id, body, css=\u0027cn-field\u0027):\n    caption = \u0027\u003Clabel class=\u0022cn-label\u0022 for=\u0022%s\u0022\u003E%s\u003C/label\u003E\u0027 % (for_id, esc(label)) if label else \u0027\u0027\n    return Html(\u0027\u003Cdiv class=\u0022%s\u0022\u003E%s%s\u003C/div\u003E\u0027 % (css, caption, body))\n\n\ndef _ir_default(name, value):\n    page = _ir_current()\n    if name not in page.state:\n        page.state[name] = value\n        namespace = getattr(_IR_LOCAL, \u0027namespace\u0027, None)\n        if namespace is not None:\n            namespace.setdefault(name, value)\n    page._ir[\u0027controls\u0027][name] = True\n    return page.state[name]\n\n\n# \u2500\u2500 Controls: each one is bound to the state value of its name \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ndef slider(name, min=0, max=100, step=1, value=None, label=None, live=False, format=None):\n    \u0022\u0022\u0022A slider; the state value changes when it is released, or while dragging with live=True.\u0022\u0022\u0022\n    current = _ir_default(name, min if value is None else value)\n    control_id = \u0027cn-\u0027 \u002B name\n    shown = fmt(current, format)\n    body = (\u0027\u003Cdiv class=\u0022cn-slider-row\u0022\u003E\u003Cinput type=\u0022range\u0022 %s/\u003E\u003Coutput class=\u0022cn-slider-value\u0022 data-cn-format=\u0022%s\u0022\u003E%s\u003C/output\u003E\u003C/div\u003E\u0027\n            % (_ir_attrs(id=control_id, class_=\u0027cn-slider\u0027, min=min, max=max, step=step, value=current,\n                         data_cn_bind=name, data_cn_type=\u0027number\u0027, data_cn_live=\u00271\u0027 if live else None),\n               esc(format or \u0027\u0027), esc(shown)))\n    return _ir_label(label, control_id, body)\n\n\ndef number(name, value=None, min=None, max=None, step=None, label=None, integer=False):\n    \u0022\u0022\u0022A number box.\u0022\u0022\u0022\n    current = _ir_default(name, 0 if value is None else value)\n    control_id = \u0027cn-\u0027 \u002B name\n    body = \u0027\u003Cinput type=\u0022number\u0022 %s/\u003E\u0027 % _ir_attrs(\n        id=control_id, class_=\u0027cn-input\u0027, value=current, min=min, max=max, step=step if step is not None else (1 if integer else \u0027any\u0027),\n        data_cn_bind=name, data_cn_type=\u0027int\u0027 if integer else \u0027number\u0027)\n    return _ir_label(label, control_id, body)\n\n\ndef text_input(name, value=\u0027\u0027, label=None, placeholder=None):\n    \u0022\u0022\u0022A one-line text box; the state value changes when it loses focus or Enter is pressed.\u0022\u0022\u0022\n    current = _ir_default(name, value)\n    control_id = \u0027cn-\u0027 \u002B name\n    body = \u0027\u003Cinput type=\u0022text\u0022 %s/\u003E\u0027 % _ir_attrs(\n        id=control_id, class_=\u0027cn-input\u0027, value=current, placeholder=placeholder, data_cn_bind=name, data_cn_type=\u0027text\u0027)\n    return _ir_label(label, control_id, body)\n\n\ndef textarea(name, value=\u0027\u0027, label=None, rows=4, placeholder=None):\n    \u0022\u0022\u0022A multi-line text box.\u0022\u0022\u0022\n    current = _ir_default(name, value)\n    control_id = \u0027cn-\u0027 \u002B name\n    body = \u0027\u003Ctextarea %s\u003E%s\u003C/textarea\u003E\u0027 % (_ir_attrs(\n        id=control_id, class_=\u0027cn-input\u0027, rows=rows, placeholder=placeholder, data_cn_bind=name, data_cn_type=\u0027text\u0027), esc(current))\n    return _ir_label(label, control_id, body)\n\n\ndef _ir_options(options):\n    if options is None:\n        return []\n    if isinstance(options, dict):\n        return [(k, v) for k, v in options.items()]\n    if hasattr(options, \u0027tolist\u0027):\n        options = options.tolist()\n    result = []\n    for option in options:\n        if isinstance(option, (list, tuple)) and len(option) == 2:\n            result.append((option[0], option[1]))\n        else:\n            result.append((option, option))\n    return result\n\n\ndef _ir_option_type(pairs):\n    values = [v for v, _ in pairs]\n    if values and all(isinstance(v, bool) for v in values):\n        return \u0027bool\u0027\n    if values and all(isinstance(v, int) and not isinstance(v, bool) for v in values):\n        return \u0027int\u0027\n    if values and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in values):\n        return \u0027number\u0027\n    return \u0027text\u0027\n\n\ndef select(name, options, value=None, label=None):\n    \u0022\u0022\u0022A combo box. Options are values, (value, caption) pairs or a {value: caption} dictionary.\u0022\u0022\u0022\n    pairs = _ir_options(options)\n    current = _ir_default(name, value if value is not None else (pairs[0][0] if pairs else None))\n    control_id = \u0027cn-\u0027 \u002B name\n    items = \u0027\u0027.join(\u0027\u003Coption value=\u0022%s\u0022%s\u003E%s\u003C/option\u003E\u0027 % (esc(v), \u0027 selected\u0027 if v == current else \u0027\u0027, esc(c)) for v, c in pairs)\n    body = \u0027\u003Cselect %s\u003E%s\u003C/select\u003E\u0027 % (_ir_attrs(\n        id=control_id, class_=\u0027cn-input\u0027, data_cn_bind=name, data_cn_type=_ir_option_type(pairs)), items)\n    return _ir_label(label, control_id, body)\n\n\ndef multiselect(name, options, value=None, label=None, size=5):\n    \u0022\u0022\u0022A list in which several options may be chosen; the state value is a list.\u0022\u0022\u0022\n    pairs = _ir_options(options)\n    current = _ir_default(name, list(value or []))\n    control_id = \u0027cn-\u0027 \u002B name\n    items = \u0027\u0027.join(\u0027\u003Coption value=\u0022%s\u0022%s\u003E%s\u003C/option\u003E\u0027 % (esc(v), \u0027 selected\u0027 if v in (current or []) else \u0027\u0027, esc(c)) for v, c in pairs)\n    body = \u0027\u003Cselect multiple %s\u003E%s\u003C/select\u003E\u0027 % (_ir_attrs(\n        id=control_id, class_=\u0027cn-input\u0027, size=size, data_cn_bind=name, data_cn_type=\u0027multi:\u0027 \u002B _ir_option_type(pairs)), items)\n    return _ir_label(label, control_id, body)\n\n\ndef radio(name, options, value=None, label=None, inline=True):\n    \u0022\u0022\u0022A group of radio buttons.\u0022\u0022\u0022\n    pairs = _ir_options(options)\n    current = _ir_default(name, value if value is not None else (pairs[0][0] if pairs else None))\n    control_id = \u0027cn-\u0027 \u002B name\n    kind = _ir_option_type(pairs)\n    items = \u0027\u0027.join(\u0027\u003Clabel class=\u0022cn-choice\u0022\u003E\u003Cinput type=\u0022radio\u0022 name=\u0022%s\u0022 value=\u0022%s\u0022%s/\u003E %s\u003C/label\u003E\u0027\n                    % (control_id, esc(v), \u0027 checked\u0027 if v == current else \u0027\u0027, esc(c)) for v, c in pairs)\n    body = \u0027\u003Cdiv %s\u003E%s\u003C/div\u003E\u0027 % (_ir_attrs(id=control_id, class_=\u0027cn-radio\u0027 \u002B (\u0027 cn-inline\u0027 if inline else \u0027\u0027),\n                                           data_cn_bind=name, data_cn_type=kind), items)\n    return _ir_label(label, control_id, body)\n\n\ndef checkbox(name, label=\u0027\u0027, value=False):\n    \u0022\u0022\u0022A check box; the state value is True or False.\u0022\u0022\u0022\n    current = bool(_ir_default(name, bool(value)))\n    control_id = \u0027cn-\u0027 \u002B name\n    return Html(\u0027\u003Clabel class=\u0022cn-choice cn-field\u0022\u003E\u003Cinput type=\u0022checkbox\u0022 %s/\u003E %s\u003C/label\u003E\u0027 % (_ir_attrs(\n        id=control_id, checked=current, data_cn_bind=name, data_cn_type=\u0027bool\u0027), esc(label)))\n\n\ndef toggle(name, label=\u0027\u0027, value=False):\n    \u0022\u0022\u0022An on/off switch; the state value is True or False.\u0022\u0022\u0022\n    current = bool(_ir_default(name, bool(value)))\n    control_id = \u0027cn-\u0027 \u002B name\n    return Html(\u0027\u003Clabel class=\u0022cn-toggle cn-field\u0022\u003E\u003Cinput type=\u0022checkbox\u0022 %s/\u003E\u003Cspan class=\u0022cn-toggle-track\u0022\u003E\u003C/span\u003E %s\u003C/label\u003E\u0027 % (_ir_attrs(\n        id=control_id, checked=current, data_cn_bind=name, data_cn_type=\u0027bool\u0027), esc(label)))\n\n\ndef date_input(name, value=None, label=None):\n    \u0022\u0022\u0022A date picker; the state value is an ISO date string (\u00272026-10-05\u0027).\u0022\u0022\u0022\n    if value is not None and hasattr(value, \u0027isoformat\u0027):\n        value = value.isoformat()[:10]\n    current = _ir_default(name, value or \u0027\u0027)\n    control_id = \u0027cn-\u0027 \u002B name\n    body = \u0027\u003Cinput type=\u0022date\u0022 %s/\u003E\u0027 % _ir_attrs(id=control_id, class_=\u0027cn-input\u0027, value=current, data_cn_bind=name, data_cn_type=\u0027text\u0027)\n    return _ir_label(label, control_id, body)\n\n\ndef color_input(name, value=\u0027#3366cc\u0027, label=None):\n    \u0022\u0022\u0022A colour picker; the state value is \u0027#rrggbb\u0027.\u0022\u0022\u0022\n    current = _ir_default(name, value)\n    control_id = \u0027cn-\u0027 \u002B name\n    body = \u0027\u003Cinput type=\u0022color\u0022 %s/\u003E\u0027 % _ir_attrs(id=control_id, class_=\u0027cn-color\u0027, value=current, data_cn_bind=name, data_cn_type=\u0027text\u0027)\n    return _ir_label(label, control_id, body)\n\n\ndef button(label, action=None, call=None, kind=\u0027primary\u0027, confirm=None, disabled=False):\n    \u0022\u0022\u0022A button. action= fires one of the report\u0027s actions (an output of the block); call= runs a\n    method of the report and renders the page again.\u0022\u0022\u0022\n    return Html(\u0027\u003Cbutton type=\u0022button\u0022 %s\u003E%s\u003C/button\u003E\u0027 % (_ir_attrs(\n        class_=\u0027cn-button cn-\u0027 \u002B kind, data_cn_action=action, data_cn_call=call, data_cn_confirm=confirm,\n        disabled=bool(disabled)), esc(label)))\n\n\n# \u2500\u2500 Displays \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ndef table(rows=None, columns=None, page_size=20, height=None, sortable=True, filter=True, select=None,\n          formats=None, max_rows=20000, id=None):\n    \u0022\u0022\u0022A table with sorting, filtering and pages. select= names a state value that receives the\n    clicked row as a dictionary.\u0022\u0022\u0022\n    headers, cells = _ir_table(_ir_data(rows), columns)\n    total = len(cells)\n    cells = cells[:max_rows] if max_rows else cells\n    if select:\n        _ir_default(select, None)\n    spec = {\n        \u0027columns\u0027: headers, \u0027rows\u0027: cells, \u0027total\u0027: total, \u0027pageSize\u0027: page_size,\n        \u0027sortable\u0027: sortable, \u0027filter\u0027: filter, \u0027select\u0027: select, \u0027formats\u0027: formats or {},\n    }\n    style = \u0027max-height:%dpx\u0027 % height if height else None\n    return Html(\u0027\u003Cdiv %s\u003E\u003Cscript type=\u0022application/json\u0022\u003E%s\u003C/script\u003E\u003C/div\u003E\u0027 % (_ir_attrs(\n        id=id or _ir_next_id(\u0027table\u0027), class_=\u0027cn-table\u0027, data_cn_table=\u00271\u0027, data_cn_opaque=\u00271\u0027, style=style),\n        _ir_json_block(spec)))\n\n\n_IR_PALETTE = [\u0027#3366cc\u0027, \u0027#dc3912\u0027, \u0027#ff9900\u0027, \u0027#109618\u0027, \u0027#990099\u0027, \u0027#0099c6\u0027, \u0027#dd4477\u0027, \u0027#66aa00\u0027, \u0027#b82e2e\u0027, \u0027#316395\u0027]\n\n\ndef _ir_series(data, keys):\n    if keys is None:\n        return []\n    if isinstance(keys, str):\n        return [(keys, column(data, keys))]\n    keys = keys.tolist() if hasattr(keys, \u0027tolist\u0027) else list(keys)\n    if keys and all(isinstance(k, str) for k in keys) and data is not None:\n        return [(k, column(data, k)) for k in keys]\n    if keys and all(isinstance(k, (list, tuple)) or hasattr(k, \u0027tolist\u0027) for k in keys):\n        return [(\u0027Series %d\u0027 % (i \u002B 1), column(None, k)) for i, k in enumerate(keys)]\n    return [(\u0027\u0027, keys)]\n\n\ndef chart(kind=\u0027line\u0027, data=None, x=None, y=None, labels=None, values=None, z=None, title=\u0027\u0027, height=360,\n          colors=None, x_title=None, y_title=None, legend=True, stacked=False, size=None, text=None,\n          min=None, max=None, layout=None, id=None, **trace):\n    \u0022\u0022\u0022A chart drawn with Plotly. kind: line, bar, barh, area, scatter, bubble, pie, donut,\n    histogram, box, violin, heatmap, funnel, waterfall, radar, treemap, sunburst, gauge,\n    indicator, candlestick. x/y/labels/values/z take column names of data or sequences; y may be\n    a list of column names to draw several series.\u0022\u0022\u0022\n    data = _ir_data(data)\n    kind = (kind or \u0027line\u0027).lower()\n    palette = list(colors) if colors else _IR_PALETTE\n    traces = []\n\n    if kind in (\u0027pie\u0027, \u0027donut\u0027, \u0027funnel\u0027, \u0027treemap\u0027, \u0027sunburst\u0027, \u0027funnelarea\u0027):\n        names = column(data, labels if labels is not None else x)\n        amounts = column(data, values if values is not None else y)\n        if kind in (\u0027pie\u0027, \u0027donut\u0027):\n            t = {\u0027type\u0027: \u0027pie\u0027, \u0027labels\u0027: names, \u0027values\u0027: amounts, \u0027marker\u0027: {\u0027colors\u0027: palette}, \u0027sort\u0027: False}\n            if kind == \u0027donut\u0027:\n                t[\u0027hole\u0027] = 0.5\n        elif kind == \u0027funnel\u0027:\n            t = {\u0027type\u0027: \u0027funnel\u0027, \u0027y\u0027: names, \u0027x\u0027: amounts, \u0027marker\u0027: {\u0027color\u0027: palette[0]}}\n        else:\n            t = {\u0027type\u0027: kind, \u0027labels\u0027: names, \u0027values\u0027: amounts}\n            parents = trace.pop(\u0027parents\u0027, None)\n            t[\u0027parents\u0027] = column(data, parents) if parents is not None else [\u0027\u0027] * len(names or [])\n        traces.append(t)\n    elif kind in (\u0027histogram\u0027,):\n        for i, (name, series) in enumerate(_ir_series(data, x if x is not None else y)):\n            traces.append({\u0027type\u0027: \u0027histogram\u0027, \u0027x\u0027: series, \u0027name\u0027: name, \u0027marker\u0027: {\u0027color\u0027: palette[i % len(palette)]}})\n    elif kind in (\u0027box\u0027, \u0027violin\u0027):\n        for i, (name, series) in enumerate(_ir_series(data, y if y is not None else x)):\n            traces.append({\u0027type\u0027: kind, \u0027y\u0027: series, \u0027name\u0027: name, \u0027marker\u0027: {\u0027color\u0027: palette[i % len(palette)]}})\n    elif kind == \u0027heatmap\u0027:\n        matrix = z\n        if isinstance(matrix, str):\n            matrix = column(data, matrix)\n        if matrix is None and data is not None:\n            matrix = data.values.tolist() if hasattr(data, \u0027values\u0027) and hasattr(data, \u0027columns\u0027) else data\n        t = {\u0027type\u0027: \u0027heatmap\u0027, \u0027z\u0027: _ir_plain(matrix), \u0027colorscale\u0027: trace.pop(\u0027colorscale\u0027, \u0027RdYlGn\u0027)}\n        if x is not None:\n            t[\u0027x\u0027] = column(data, x) if isinstance(x, str) else list(x)\n        elif hasattr(data, \u0027columns\u0027):\n            t[\u0027x\u0027] = [str(c) for c in data.columns]\n        if y is not None:\n            t[\u0027y\u0027] = column(data, y) if isinstance(y, str) else list(y)\n        traces.append(t)\n    elif kind == \u0027radar\u0027:\n        theta = column(data, labels if labels is not None else x)\n        for i, (name, series) in enumerate(_ir_series(data, values if values is not None else y)):\n            traces.append({\u0027type\u0027: \u0027scatterpolar\u0027, \u0027r\u0027: series \u002B series[:1], \u0027theta\u0027: theta \u002B theta[:1], \u0027fill\u0027: \u0027toself\u0027,\n                           \u0027name\u0027: name, \u0027line\u0027: {\u0027color\u0027: palette[i % len(palette)]}})\n    elif kind in (\u0027gauge\u0027, \u0027indicator\u0027):\n        amount = values if values is not None else y\n        amount = column(data, amount)[-1] if isinstance(amount, str) else amount\n        t = {\u0027type\u0027: \u0027indicator\u0027, \u0027value\u0027: amount, \u0027title\u0027: {\u0027text\u0027: title}}\n        if kind == \u0027gauge\u0027:\n            low = 0 if min is None else min\n            high = 100 if max is None else max\n            t[\u0027mode\u0027] = \u0027gauge\u002Bnumber\u0027\n            t[\u0027gauge\u0027] = {\u0027axis\u0027: {\u0027range\u0027: [low, high]}, \u0027bar\u0027: {\u0027color\u0027: palette[0]}}\n        else:\n            t[\u0027mode\u0027] = \u0027number\u0027\n        traces.append(t)\n        title = \u0027\u0027\n    elif kind == \u0027candlestick\u0027:\n        t = {\u0027type\u0027: \u0027candlestick\u0027, \u0027x\u0027: column(data, x)}\n        for part in (\u0027open\u0027, \u0027high\u0027, \u0027low\u0027, \u0027close\u0027):\n            t[part] = column(data, trace.pop(part, part))\n        traces.append(t)\n    elif kind == \u0027waterfall\u0027:\n        traces.append({\u0027type\u0027: \u0027waterfall\u0027, \u0027x\u0027: column(data, x), \u0027y\u0027: column(data, y)})\n    else:\n        xs = column(data, x)\n        for i, (name, series) in enumerate(_ir_series(data, y)):\n            color = palette[i % len(palette)]\n            if kind in (\u0027bar\u0027, \u0027barh\u0027, \u0027stacked_bar\u0027):\n                t = {\u0027type\u0027: \u0027bar\u0027, \u0027name\u0027: name, \u0027marker\u0027: {\u0027color\u0027: color}}\n                if kind == \u0027barh\u0027:\n                    t.update({\u0027orientation\u0027: \u0027h\u0027, \u0027x\u0027: series, \u0027y\u0027: xs})\n                else:\n                    t.update({\u0027x\u0027: xs, \u0027y\u0027: series})\n            elif kind in (\u0027scatter\u0027, \u0027bubble\u0027):\n                t = {\u0027type\u0027: \u0027scatter\u0027, \u0027mode\u0027: \u0027markers\u0027, \u0027x\u0027: xs, \u0027y\u0027: series, \u0027name\u0027: name, \u0027marker\u0027: {\u0027color\u0027: color}}\n                if size is not None:\n                    sizes = column(data, size)\n                    # min and max are parameters here, so the builtin is reached by another name.\n                    top = float(_ir_builtin_max(sizes) if sizes else 1.0) or 1.0\n                    t[\u0027marker\u0027][\u0027size\u0027] = [6 \u002B 40 * float(s) / top for s in sizes]\n            else:\n                t = {\u0027type\u0027: \u0027scatter\u0027, \u0027mode\u0027: \u0027lines\u002Bmarkers\u0027 if kind == \u0027line\u0027 else \u0027lines\u0027, \u0027x\u0027: xs, \u0027y\u0027: series,\n                     \u0027name\u0027: name, \u0027line\u0027: {\u0027color\u0027: color}}\n                if kind == \u0027area\u0027:\n                    t[\u0027fill\u0027] = \u0027tonexty\u0027 if stacked and i else \u0027tozeroy\u0027\n                    if stacked:\n                        t[\u0027stackgroup\u0027] = \u0027one\u0027\n            if text is not None:\n                t[\u0027text\u0027] = column(data, text)\n            traces.append(t)\n\n    for t in traces:\n        t.update(trace)\n    spec_layout = {\n        \u0027title\u0027: {\u0027text\u0027: title} if title else None,\n        \u0027height\u0027: height,\n        \u0027margin\u0027: {\u0027l\u0027: 50, \u0027r\u0027: 20, \u0027t\u0027: 50 if title else 20, \u0027b\u0027: 40},\n        \u0027showlegend\u0027: bool(legend) and len(traces) \u003E 1 or (legend and kind in (\u0027pie\u0027, \u0027donut\u0027)),\n        \u0027barmode\u0027: \u0027stack\u0027 if stacked or kind == \u0027stacked_bar\u0027 else \u0027group\u0027,\n        \u0027xaxis\u0027: {\u0027title\u0027: {\u0027text\u0027: x_title}} if x_title else {},\n        \u0027yaxis\u0027: {\u0027title\u0027: {\u0027text\u0027: y_title}} if y_title else {},\n        \u0027paper_bgcolor\u0027: \u0027rgba(0,0,0,0)\u0027, \u0027plot_bgcolor\u0027: \u0027rgba(0,0,0,0)\u0027,\n    }\n    if layout:\n        spec_layout.update(layout)\n    return plotly({\u0027data\u0027: traces, \u0027layout\u0027: {k: v for k, v in spec_layout.items() if v is not None}}, height=height, id=id)\n\n\ndef _ir_builtin_max(values):\n    import builtins\n    return builtins.max(values)\n\n\ndef plotly(figure, height=None, id=None, config=None):\n    \u0022\u0022\u0022Any Plotly figure: a plotly.graph_objects Figure or a {\u0027data\u0027: [...], \u0027layout\u0027: {...}} dictionary.\u0022\u0022\u0022\n    spec = figure.to_plotly_json() if hasattr(figure, \u0027to_plotly_json\u0027) else dict(figure)\n    spec.setdefault(\u0027layout\u0027, {})\n    if height:\n        spec[\u0027layout\u0027].setdefault(\u0027height\u0027, height)\n    spec[\u0027config\u0027] = dict({\u0027displaylogo\u0027: False, \u0027responsive\u0027: True}, **(config or {}))\n    box_height = spec[\u0027layout\u0027].get(\u0027height\u0027) or 360\n    return Html(\u0027\u003Cdiv %s\u003E\u003Cscript type=\u0022application/json\u0022\u003E%s\u003C/script\u003E\u003C/div\u003E\u0027 % (_ir_attrs(\n        id=id or _ir_next_id(\u0027chart\u0027), class_=\u0027cn-chart\u0027, data_cn_chart=\u00271\u0027, data_cn_opaque=\u00271\u0027,\n        style=\u0027min-height:%dpx\u0027 % box_height), _ir_json_block(spec)))\n\n\ndef figure(fig, width=None, dpi=110):\n    \u0022\u0022\u0022A matplotlib figure, as a picture.\u0022\u0022\u0022\n    buffer = _ir_io.BytesIO()\n    fig.savefig(buffer, format=\u0027png\u0027, bbox_inches=\u0027tight\u0027, dpi=dpi)\n    try:\n        import matplotlib.pyplot as plt\n        plt.close(fig)\n    except Exception:\n        pass\n    return image(buffer.getvalue(), width=width)\n\n\ndef image(source, width=None, alt=\u0027\u0027):\n    \u0022\u0022\u0022A picture: bytes, a file path, or a URL.\u0022\u0022\u0022\n    if isinstance(source, (bytes, bytearray)):\n        kind = \u0027jpeg\u0027 if bytes(source[:3]) == b\u0027\\xff\\xd8\\xff\u0027 else \u0027png\u0027\n        src = \u0027data:image/%s;base64,%s\u0027 % (kind, _ir_base64.b64encode(bytes(source)).decode(\u0027ascii\u0027))\n    elif isinstance(source, str) and _ir_os.path.isfile(source):\n        extension = _ir_os.path.splitext(source)[1].lower().lstrip(\u0027.\u0027) or \u0027png\u0027\n        mime = {\u0027jpg\u0027: \u0027jpeg\u0027, \u0027svg\u0027: \u0027svg\u002Bxml\u0027}.get(extension, extension)\n        with open(source, \u0027rb\u0027) as handle:\n            src = \u0027data:image/%s;base64,%s\u0027 % (mime, _ir_base64.b64encode(handle.read()).decode(\u0027ascii\u0027))\n    else:\n        src = str(source)\n    style = \u0027width:%s\u0027 % (width if isinstance(width, str) else \u0027%dpx\u0027 % width) if width else None\n    return Html(\u0027\u003Cimg %s/\u003E\u0027 % _ir_attrs(class_=\u0027cn-image\u0027, src=src, alt=alt, style=style))\n\n\n_IR_DEFAULT_SCALE = [\u0027#d73027\u0027, \u0027#fc8d59\u0027, \u0027#fee08b\u0027, \u0027#91cf60\u0027, \u0027#1a9850\u0027]\n\n\ndef color_bar(value, min=0, max=100, colors=None, label=None, show_value=True, format=None, height=14, ticks=True):\n    \u0022\u0022\u0022A colour scale with a marker at the value \u2014 red to green by default.\u0022\u0022\u0022\n    scale = list(colors) if colors else _IR_DEFAULT_SCALE\n    try:\n        position = (float(value) - float(min)) / (float(max) - float(min)) * 100.0\n    except (TypeError, ValueError, ZeroDivisionError):\n        position = 0.0\n    position = 0.0 if position != position else position\n    position = 0.0 if position \u003C 0 else 100.0 if position \u003E 100 else position\n    gradient = \u0027linear-gradient(to right, %s)\u0027 % \u0027, \u0027.join(scale)\n    caption = \u0027\u003Cdiv class=\u0022cn-label\u0022\u003E%s%s\u003C/div\u003E\u0027 % (\n        esc(label or \u0027\u0027), (\u0027 \u003Cb\u003E%s\u003C/b\u003E\u0027 % esc(fmt(value, format) if format else _ir_number(float(value)) if isinstance(value, (int, float)) else value)) if show_value else \u0027\u0027)\n    marks = (\u0027\u003Cdiv class=\u0022cn-colorbar-ticks\u0022\u003E\u003Cspan\u003E%s\u003C/span\u003E\u003Cspan\u003E%s\u003C/span\u003E\u003C/div\u003E\u0027 % (esc(min), esc(max))) if ticks else \u0027\u0027\n    return Html(\u0027\u003Cdiv class=\u0022cn-colorbar cn-field\u0022\u003E%s\u003Cdiv class=\u0022cn-colorbar-track\u0022 style=\u0022height:%dpx;background:%s\u0022\u003E\u0027\n                \u0027\u003Cdiv class=\u0022cn-colorbar-marker\u0022 style=\u0022left:%.2f%%\u0022\u003E\u003C/div\u003E\u003C/div\u003E%s\u003C/div\u003E\u0027\n                % (caption, height, gradient, position, marks))\n\n\ndef progress(value, max=100, label=None, color=None, format=None):\n    \u0022\u0022\u0022A progress bar.\u0022\u0022\u0022\n    try:\n        share = float(value) / float(max) * 100.0\n    except (TypeError, ValueError, ZeroDivisionError):\n        share = 0.0\n    share = 0.0 if share \u003C 0 else 100.0 if share \u003E 100 else share\n    style = \u0027width:%.2f%%%s\u0027 % (share, \u0027;background:%s\u0027 % color if color else \u0027\u0027)\n    caption = \u0027\u003Cdiv class=\u0022cn-label\u0022\u003E%s \u003Cb\u003E%s\u003C/b\u003E\u003C/div\u003E\u0027 % (esc(label or \u0027\u0027), esc(fmt(value, format) if format else \u0027%.0f%%\u0027 % share))\n    return Html(\u0027\u003Cdiv class=\u0022cn-progress cn-field\u0022\u003E%s\u003Cdiv class=\u0022cn-progress-track\u0022\u003E\u003Cdiv class=\u0022cn-progress-fill\u0022 style=\u0022%s\u0022\u003E\u003C/div\u003E\u003C/div\u003E\u003C/div\u003E\u0027\n                % (caption, style))\n\n\ndef kpi(label, value, delta=None, format=None, delta_format=None, good=\u0027up\u0027, color=None):\n    \u0022\u0022\u0022A headline figure with an optional change beside it.\u0022\u0022\u0022\n    shown = fmt(value, format) if format else (_ir_number(value) if isinstance(value, float) else value)\n    change = \u0027\u0027\n    if delta is not None:\n        try:\n            positive = float(delta) \u003E= 0\n        except (TypeError, ValueError):\n            positive = True\n        tone = \u0027cn-good\u0027 if positive == (good == \u0027up\u0027) else \u0027cn-bad\u0027\n        arrow = \u0027\u25B2\u0027 if positive else \u0027\u25BC\u0027\n        change = \u0027\u003Cdiv class=\u0022cn-kpi-delta %s\u0022\u003E%s %s\u003C/div\u003E\u0027 % (tone, arrow, esc(fmt(delta, delta_format) if delta_format else delta))\n    style = \u0027 style=\u0022border-top-color:%s\u0022\u0027 % esc(color) if color else \u0027\u0027\n    return Html(\u0027\u003Cdiv class=\u0022cn-kpi\u0022%s\u003E\u003Cdiv class=\u0022cn-kpi-label\u0022\u003E%s\u003C/div\u003E\u003Cdiv class=\u0022cn-kpi-value\u0022\u003E%s\u003C/div\u003E%s\u003C/div\u003E\u0027\n                % (style, esc(label), esc(shown), change))\n\n\ndef badge(text, color=\u0027#3366cc\u0027):\n    \u0022\u0022\u0022A small coloured label.\u0022\u0022\u0022\n    return Html(\u0027\u003Cspan class=\u0022cn-badge\u0022 style=\u0022background:%s\u0022\u003E%s\u003C/span\u003E\u0027 % (esc(color), esc(text)))\n",
+        "maxInputNumber": 3,
+        "maxOutputNumber": 2,
+        "documentationText": "",
+        "documentationFile": "PodejrzaneZamowienia.md",
+        "nodeCathegory": 29,
+        "id": 52,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 3,
+          "outputNumber": 2,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 87,
+            "title": "findings",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 87,
+              "title": "findings",
+              "connecttionType": 0
+            },
+            {
+              "id": 88,
+              "title": "narrator",
+              "connecttionType": 0
+            },
+            {
+              "id": 89,
+              "title": "formatter",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 90,
+            "title": "show",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 90,
+              "title": "show",
+              "connecttionType": 0
+            },
+            {
+              "id": 91,
+              "title": "eksport",
+              "connecttionType": 0
+            }
+          ],
+          "description": "PodejrzaneZamowienia",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "{\u0022ClassName\u0022:\u0022PodejrzaneZamowienia\u0022,\u0022Title\u0022:\u0022Kt\\u00F3re zam\\u00F3wienia s\\u0105 podejrzane?\u0022,\u0022Inputs\u0022:[\u0022findings\u0022,\u0022narrator\u0022,\u0022formatter\u0022],\u0022Height\u0022:1900,\u0022KeepAlive\u0022:true,\u0022Markup\u0022:\u0022\\u003Cdiv class=\\u0022cn-page\\u0022\\u003E\\n  \\u003Ch1\\u003EKt\\u00F3re zam\\u00F3wienia s\\u0105 podejrzane?\\u003C/h1\\u003E\\n  \\u003Cp class=\\u0022cn-muted\\u0022\\u003E{source_note} \\u00B7 zam\\u00F3wienia (CSV) \\u002B klienci (JSON) \\u002B produkty (Excel) \\u2192 Data Scan \\u2192 regu\\u0142y \\u002B wzorce klient\\u00F3w \\u2192 lista do sprawdzenia\\u003C/p\\u003E\\n\\n  \\u003Cdiv class=\\u0022cn-grid-4\\u0022\\u003E\\n    {self._kpi(\\u0022Przejrzane zam\\u00F3wienia\\u0022, f.num(r.total_orders), \\u0022w \\u0022 \\u002B f.num(r.seconds, 1) \\u002B \\u0022 s\\u0022)}\\n    {self._kpi(\\u0022Do sprawdzenia\\u0022, str(r.flagged_count), f.pct(100 * r.flagged_count / r.total_orders, 4) \\u002B \\u0022 wszystkich\\u0022, -r.flagged_count)}\\n    {self._kpi(\\u0022Klienci do sprawdzenia\\u0022, str(r.customer_count), \\u0022klony i nag\\u0142e zmiany\\u0022, -r.customer_count)}\\n    {self._kpi(\\u0022Strata na cenach poni\\u017Cej kosztu\\u0022, f.zl(loss), \\u0022warto\\u015B\\u0107 podejrzanych: \\u0022 \\u002B f.short_zl(r.flagged_value), -loss)}\\n  \\u003C/div\\u003E\\n\\n  \\u003Cdiv class=\\u0022cn-grid-2\\u0022\\u003E\\n    \\u003Cdiv class=\\u0022cn-card answer\\u0022\\u003E\\n      \\u003Ch3\\u003EOdpowied\\u017A\\u003C/h3\\u003E\\n      \\u003Cp class=\\u0022headline\\u0022\\u003E{headline}\\u003C/p\\u003E\\n      {findings_html}\\n      {button(\\u0022Zapisz list\\u0119 do CSV\\u0022, action=\\u0022eksport\\u0022)}\\n    \\u003C/div\\u003E\\n    \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E\\n      \\u003Ch3\\u003ETrafienia regu\\u0142\\u003C/h3\\u003E\\n      {rule_chart}\\n    \\u003C/div\\u003E\\n  \\u003C/div\\u003E\\n\\n  \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E\\n    \\u003Ch3\\u003EZam\\u00F3wienia do sprawdzenia\\u003C/h3\\u003E\\n    \\u003Cdiv class=\\u0022cn-row\\u0022\\u003E{select(\\u0022rule\\u0022, rule_options, label=\\u0022Poka\\u017C\\u0022)}\\u003C/div\\u003E\\n    \\u003Cdiv class=\\u0022cn-grid-2 wide-left\\u0022\\u003E\\n      \\u003Cdiv\\u003E{table(flagged_rows, page_size=12, select=\\u0022chosen\\u0022, id=\\u0022flagged\\u0022)}\\u003C/div\\u003E\\n      \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E{chosen_html}\\u003C/div\\u003E\\n    \\u003C/div\\u003E\\n  \\u003C/div\\u003E\\n\\n  \\u003Cdiv class=\\u0022cn-grid-2\\u0022\\u003E\\n    \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E\\u003Ch3\\u003EKto stoi za podejrzanymi cenami i rabatami?\\u003C/h3\\u003E{rep_chart}\\u003C/div\\u003E\\n    \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E\\n      \\u003Ch3\\u003EKlienci o identycznym wzorcu zakup\\u00F3w\\u003C/h3\\u003E\\n      {table(r.similar_rows, filter=False, id=\\u0022clones\\u0022)}\\n      \\u003Ch3\\u003ENag\\u0142a zmiana zachowania\\u003C/h3\\u003E\\n      {table(r.behaviour_rows, filter=False, id=\\u0022behaviour\\u0022)}\\n    \\u003C/div\\u003E\\n  \\u003C/div\\u003E\\n\\n  \\u003Cdiv class=\\u0022cn-card\\u0022\\u003E\\n    \\u003Ch3\\u003EData Scan \\u2014 co CatNip rozpozna\\u0142 w danych\\u003C/h3\\u003E\\n    \\u003Cdiv class=\\u0022cn-grid-2\\u0022\\u003E\\n      \\u003Cpre class=\\u0022scan\\u0022\\u003E{scan_tree}\\u003C/pre\\u003E\\n      \\u003Cdiv\\u003E\\n        \\u003Cp\\u003E\\u003Cb\\u003EPowi\\u0105zania wykryte automatycznie\\u003C/b\\u003E\\u003C/p\\u003E\\n        {relations_html}\\n        \\u003Cp\\u003E\\u003Cb\\u003EPipeline\\u003C/b\\u003E\\u003C/p\\u003E\\n        {table(pipeline_rows, filter=False, sortable=False, page_size=15, id=\\u0022pipeline\\u0022)}\\n      \\u003C/div\\u003E\\n    \\u003C/div\\u003E\\n  \\u003C/div\\u003E\\n\\u003C/div\\u003E\\n\u0022,\u0022Code\u0022:\u0022def setup(self):\\n    self.set(\\u0022rule\\u0022, \\u0022Wszystkie regu\\u0142y\\u0022)\\n\\ndef prepare(self):\\n    r = self.findings\\n    f = self.formatter\\n    rule = self.get(\\u0022rule\\u0022) or \\u0022Wszystkie regu\\u0142y\\u0022\\n    flagged = r.flagged if rule == \\u0022Wszystkie regu\\u0142y\\u0022 else r.flagged[r.flagged[\\u0022Powody\\u0022].str.contains(rule, regex=False)]\\n    chosen = self.get(\\u0022chosen\\u0022)\\n    return {\\n        \\u0022r\\u0022: r,\\n        \\u0022f\\u0022: f,\\n        \\u0022headline\\u0022: self.narrator.headline(r),\\n        \\u0022findings_html\\u0022: html(\\u0022\\u003Cul\\u003E%s\\u003C/ul\\u003E\\u0022 % \\u0022\\u0022.join(\\u0022\\u003Cli\\u003E%s\\u003C/li\\u003E\\u0022 % esc(line) for line in self.narrator.findings(r))),\\n        \\u0022rule_options\\u0022: [\\u0022Wszystkie regu\\u0142y\\u0022] \\u002B [row[\\u0022Regu\\u0142a\\u0022] for row in r.rule_rows],\\n        \\u0022flagged_rows\\u0022: flagged,\\n        \\u0022rule_chart\\u0022: self._rule_chart(r),\\n        \\u0022rep_chart\\u0022: self._rep_chart(r),\\n        \\u0022chosen_html\\u0022: self._chosen_html(chosen),\\n        \\u0022loss\\u0022: float(r.flagged[\\u0022Strata\\u0022].sum()),\\n        \\u0022scan_tree\\u0022: r.scan.tree_text(),\\n        \\u0022relations_html\\u0022: html(\\u0022\\u003Cul\\u003E%s\\u003C/ul\\u003E\\u0022 % \\u0022\\u0022.join(\\u0022\\u003Cli\\u003E%s\\u003C/li\\u003E\\u0022 % esc(x) for x in r.scan.relations())),\\n        \\u0022pipeline_rows\\u0022: r.scan.pipeline_rows(),\\n        \\u0022source_note\\u0022: \\u0022dane demonstracyjne wygenerowane przed chwil\\u0105 w input/\\u0022 if r.demo else \\u0022dane z folderu input/\\u0022,\\n    }\\n\\ndef _rule_chart(self, r):\\n    rows = sorted(r.rule_rows, key=lambda row: row[\\u0022Zam\\u00F3wienia\\u0022])\\n    return chart(\\u0022barh\\u0022, rows, x=\\u0022Regu\\u0142a\\u0022, y=\\u0022Zam\\u00F3wienia\\u0022, height=300, colors=[\\u0022#d9534f\\u0022], text=\\u0022Zam\\u00F3wienia\\u0022,\\n                 layout={\\u0022margin\\u0022: {\\u0022l\\u0022: 170, \\u0022r\\u0022: 20, \\u0022t\\u0022: 20, \\u0022b\\u0022: 40}})\\n\\ndef _rep_chart(self, r):\\n    rows = r.rep_rows[:8]\\n    if not rows:\\n        return html(\\u0022\\u003Cp class=\\u0027cn-muted\\u0027\\u003EBrak podejrzanych cen i rabat\\u00F3w.\\u003C/p\\u003E\\u0022)\\n    return chart(\\u0022bar\\u0022, rows, x=\\u0022Handlowiec\\u0022, y=[\\u0022Udzia\\u0142 w podejrzanych %\\u0022, \\u0022Udzia\\u0142 we wszystkich zam\\u00F3wieniach %\\u0022],\\n                 height=300, colors=[\\u0022#d9534f\\u0022, \\u0022#9aa5b1\\u0022], y_title=\\u0022%\\u0022)\\n\\ndef _chosen_html(self, chosen):\\n    if not chosen:\\n        return html(\\u0022\\u003Cp class=\\u0027cn-muted\\u0027\\u003EKliknij wiersz tabeli, \\u017Ceby zobaczy\\u0107 szczeg\\u00F3\\u0142y zam\\u00F3wienia.\\u003C/p\\u003E\\u0022)\\n    reasons = \\u0022\\u0022.join(\\u0022\\u003Cspan class=\\u0027flag\\u0027\\u003E%s\\u003C/span\\u003E\\u0022 % esc(x.strip()) for x in str(chosen.get(\\u0022Powody\\u0022, \\u0022\\u0022)).split(\\u0022,\\u0022))\\n    fields = \\u0022\\u0022.join(\\u0022\\u003Ctr\\u003E\\u003Ctd\\u003E%s\\u003C/td\\u003E\\u003Ctd\\u003E\\u003Cb\\u003E%s\\u003C/b\\u003E\\u003C/td\\u003E\\u003C/tr\\u003E\\u0022 % (esc(k), esc(v)) for k, v in chosen.items() if k != \\u0022Powody\\u0022)\\n    return html(\\u0022\\u003Cp\\u003E%s\\u003C/p\\u003E\\u003Ctable class=\\u0027detail\\u0027\\u003E%s\\u003C/table\\u003E\\u0022 % (reasons, fields))\\n\\ndef on_eksport(self, values):\\n    self.toast(\\u0022Zapisuj\\u0119 %d zam\\u00F3wie\\u0144 do output/\\u2026\\u0022 % self.findings.flagged_count, \\u0022info\\u0022)\\n    return self.findings\\n\\ndef _kpi(self, label, value, delta=None, change=0.0, good_up=True):\\n    \\u0022\\u0022\\u0022Kafelek KPI: strza\\u0142ka i kolor bior\\u0105 si\\u0119 z liczby change, a opis zmiany (delta) jest ju\\u017C po polsku.\\u0022\\u0022\\u0022\\n    extra = \\u0022\\u0022\\n    if delta is not None:\\n        tone = \\u0022cn-good\\u0022 if (change \\u003E= 0) == good_up else \\u0022cn-bad\\u0022\\n        arrow = \\u0022\\u25B2\\u0022 if change \\u003E 0 else (\\u0022\\u25BC\\u0022 if change \\u003C 0 else \\u0022\\u2022\\u0022)\\n        extra = \\u0027\\u003Cdiv class=\\u0022cn-kpi-delta %s\\u0022\\u003E%s %s\\u003C/div\\u003E\\u0027 % (tone, arrow, esc(delta))\\n    return html(\\u0027\\u003Cdiv class=\\u0022cn-kpi\\u0022\\u003E\\u003Cdiv class=\\u0022cn-kpi-label\\u0022\\u003E%s\\u003C/div\\u003E\\u003Cdiv class=\\u0022cn-kpi-value\\u0022\\u003E%s\\u003C/div\\u003E%s\\u003C/div\\u003E\\u0027\\n                % (esc(label), esc(value), extra))\\n\u0022,\u0022Style\u0022:\u0022.cn-page h1 { margin-bottom: 2px; }\\n.cn-card h3 { margin-top: 0; }\\n.answer .headline { font-size: 1.15em; font-weight: 600; }\\n.answer ol, .answer ul { margin-top: 4px; padding-left: 22px; }\\n.answer li { margin: 3px 0; }\\npre.scan { font-size: 0.82em; line-height: 1.35; max-height: 420px; overflow: auto; background: rgba(127,127,127,0.08); padding: 10px; border-radius: 6px; }\\n.cn-kpi-value { font-size: 1.35em; }\\n.flag { display: inline-block; padding: 1px 6px; margin: 1px; border-radius: 4px; font-size: 0.85em; background: rgba(220,57,18,0.12); }\\n.wide-left { grid-template-columns: 2fr 1fr; }\\ntable.detail td { padding: 2px 8px 2px 0; vertical-align: top; }\\n\u0022,\u0022SampleData\u0022:\u0022\u0022,\u0022Actions\u0022:[{\u0022Name\u0022:\u0022eksport\u0022,\u0022Label\u0022:\u0022Zapisz list\\u0119 do CSV\u0022,\u0022Mode\u0022:\u0022Live\u0022,\u0022Description\u0022:\u0022Zapisuje list\\u0119 podejrzanych zam\\u00F3wie\\u0144 do output/ jako CSV dla Excela.\u0022}]}",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 29,
+        "title": "PodejrzaneZamowienia",
+        "targetPath": ""
+      },
+      "locationX": 1200,
+      "locationY": 350
+    },
+    {
+      "nodeData": {
+        "codeText": "import datetime as dt\n\nfrom AnomalyReport import AnomalyReport\nfrom ProjectFolders import ProjectFolders\n\n\nclass FindingsCsvWriter:\n    \u0022\u0022\u0022Zapisuje list\u0119 podejrzanych zam\u00F3wie\u0144 do output/ jako CSV dla Excela (\u015Brednik, UTF-8 z BOM).\u0022\u0022\u0022\n\n    def __init__(self, report: AnomalyReport, folders: ProjectFolders):\n        self.report = report\n        self.folders = folders\n\n    def csv_path(self) -\u003E str:\n        stamp = dt.datetime.now().strftime(\u0022%Y%m%d_%H%M%S\u0022)\n        path = self.folders.output_path(\u0022podejrzane_zamowienia_%s.csv\u0022 % stamp)\n        self.report.flagged.to_csv(path, sep=\u0022;\u0022, decimal=\u0022,\u0022, index=False, encoding=\u0022utf-8-sig\u0022)\n        print(\u0022Zapisano %d podejrzanych zam\u00F3wie\u0144: %s\u0022 % (self.report.flagged_count, path))\n        return path\n",
+        "maxInputNumber": 2,
+        "maxOutputNumber": 1,
+        "documentationText": "",
+        "documentationFile": "FindingsCsvWriter.md",
+        "nodeCathegory": 3,
+        "id": 53,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 2,
+          "outputNumber": 1,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": true,
+          "selectedInputConnectionSettings": {
+            "id": 92,
+            "title": "report",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 92,
+              "title": "report",
+              "connecttionType": 0
+            },
+            {
+              "id": 93,
+              "title": "folders",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 94,
+            "title": "csv_path",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [
+            {
+              "id": 94,
+              "title": "csv_path",
+              "connecttionType": 0
+            }
+          ],
+          "description": "FindingsCsvWriter",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "FindingsCsvWriter",
+        "targetPath": ""
+      },
+      "locationX": 1500,
+      "locationY": 500
+    },
+    {
+      "nodeData": {
+        "codeText": "#\u003Cblocks_def\u003E\nfrom ProjectFolders import ProjectFolders\nfrom TableReader import TableReader\nfrom DataScanner import DataScanner\nfrom AnomalySettings import AnomalySettings\nfrom DemoOrderData import DemoOrderData\nfrom OrderDataLoader import OrderDataLoader\nfrom OrderRules import OrderRules\nfrom CustomerPatterns import CustomerPatterns\nfrom AnomalyDetector import AnomalyDetector\nfrom PlnFormat import PlnFormat\nfrom AnomalyNarrator import AnomalyNarrator\nfrom PodejrzaneZamowienia import PodejrzaneZamowienia\nfrom FindingsCsvWriter import FindingsCsvWriter\n#\u003Cend_of_block_defs\u003E\n\ndef main():\n#\u003Cblocks_call\u003E\n\tfolders = ProjectFolders()\n\tdata_1 = folders.folders()\n\treader = TableReader()\n\tdata_2 = reader.reader()\n\tscanner = DataScanner()\n\tdata_3 = scanner.scanner()\n\tsettings = AnomalySettings()\n\tdata_4 = settings.settings()\n\tgenerator = DemoOrderData(data_4)\n\tdata_5 = generator.generator()\n\tdataset = OrderDataLoader(data_1, data_2, data_5, data_3)\n\tdata_6 = dataset.dataset()\n\trules = OrderRules(data_4)\n\tdata_7 = rules.rules()\n\tpatterns = CustomerPatterns(data_4)\n\tdata_8 = patterns.patterns()\n\tfindings = AnomalyDetector(data_6, data_7, data_8)\n\tdata_9 = findings.findings()\n\tformatter = PlnFormat()\n\tdata_10 = formatter.formatter()\n\tnarrator = AnomalyNarrator(data_10)\n\tdata_11 = narrator.narrator()\n\tresult = PodejrzaneZamowienia(data_9, data_11, data_10)\n\tresult.show()\n\tdef _on_result_eksport(data_12):\n\t\tzapisany_csv = FindingsCsvWriter(data_12, data_1)\n\t\tdata_13 = zapisany_csv.csv_path()\n\tresult.bind_action(\u0027eksport\u0027, _on_result_eksport)\n#\u003Cend_of_block_calls\u003E\n\tpass\n\nif __name__ == \u0022__main__\u0022:\n\tmain()\n",
+        "maxInputNumber": 2,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "Main.md",
+        "nodeCathegory": 3,
+        "id": 54,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 2,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": true,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 95,
+            "title": "result",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [
+            {
+              "id": 95,
+              "title": "result",
+              "connecttionType": 0
+            },
+            {
+              "id": 96,
+              "title": "zapisany_csv",
+              "connecttionType": 0
+            }
+          ],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "Main",
+          "isMain": true,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "Main",
+        "targetPath": ""
+      },
+      "locationX": 1800,
+      "locationY": 350
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass\n\n\n@dataclass\nclass ColumnProfile:\n    \u0022\u0022\u0022Jedna kolumna tabeli, tak jak zobaczy\u0142 j\u0105 Data Scan.\u0022\u0022\u0022\n\n    name: str\n    type_name: str\n    null_pct: float\n    distinct: int\n    example: str\n    is_key: bool = False\n    references: str = \u0022\u0022\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "ColumnProfile.md",
+        "nodeCathegory": 3,
+        "id": 55,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "ColumnProfile",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "ColumnProfile",
+        "targetPath": ""
+      },
+      "locationX": 0,
+      "locationY": 900
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass, field\nfrom typing import List\n\nfrom ColumnProfile import ColumnProfile\n\n\n@dataclass\nclass TableProfile:\n    \u0022\u0022\u0022Jeden plik \u017Ar\u00F3d\u0142owy: format, liczba wierszy i profile kolumn.\u0022\u0022\u0022\n\n    name: str\n    source_format: str\n    rows: int\n    columns: List[ColumnProfile] = field(default_factory=list)\n\n    def key(self) -\u003E str:\n        keys = [c.name for c in self.columns if c.is_key]\n        return keys[0] if keys else \u0022\u0022\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "TableProfile.md",
+        "nodeCathegory": 3,
+        "id": 56,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "TableProfile",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "TableProfile",
+        "targetPath": ""
+      },
+      "locationX": 200,
+      "locationY": 900
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass\n\n\n@dataclass\nclass PipelineStep:\n    \u0022\u0022\u0022Jeden krok przetwarzania: co zrobiono, na czym i ile to trwa\u0142o.\u0022\u0022\u0022\n\n    name: str\n    detail: str\n    seconds: float\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "PipelineStep.md",
+        "nodeCathegory": 3,
+        "id": 57,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "PipelineStep",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "PipelineStep",
+        "targetPath": ""
+      },
+      "locationX": 400,
+      "locationY": 900
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass, field\nfrom typing import Dict, List\n\nfrom PipelineStep import PipelineStep\nfrom TableProfile import TableProfile\n\n\n@dataclass\nclass DataScan:\n    \u0022\u0022\u0022Wynik Data Scan: rozpoznane tabele, typy kolumn, klucze, powi\u0105zania i kroki przetwarzania.\u0022\u0022\u0022\n\n    tables: List[TableProfile] = field(default_factory=list)\n    pipeline: List[PipelineStep] = field(default_factory=list)\n\n    def total_rows(self) -\u003E int:\n        return sum(t.rows for t in self.tables)\n\n    def relations(self) -\u003E List[str]:\n        return [\u0022%s.%s \u2192 %s\u0022 % (t.name, c.name, c.references) for t in self.tables for c in t.columns if c.references]\n\n    def tree_text(self) -\u003E str:\n        lines = []\n        for table in self.tables:\n            lines.append(\u0022%s  [%s, %s wierszy]\u0022 % (table.name, table.source_format, format(table.rows, \u0022,\u0022).replace(\u0022,\u0022, \u0022 \u0022)))\n            width = max([len(c.name) for c in table.columns] \u002B [4])\n            for index, column in enumerate(table.columns):\n                branch = \u0022\u2514\u2500\u0022 if index == len(table.columns) - 1 else \u0022\u251C\u2500\u0022\n                notes = []\n                if column.is_key:\n                    notes.append(\u0022klucz\u0022)\n                if column.references:\n                    notes.append(\u0022\u2192 \u0022 \u002B column.references)\n                if column.null_pct \u003E 0:\n                    notes.append(\u0022braki %.1f%%\u0022 % column.null_pct)\n                suffix = (\u0022  (\u0022 \u002B \u0022, \u0022.join(notes) \u002B \u0022)\u0022) if notes else \u0022\u0022\n                lines.append(\u0022 %s %s \u2192 %s%s\u0022 % (branch, column.name.ljust(width), column.type_name.ljust(8), suffix))\n            lines.append(\u0022\u0022)\n        return \u0022\\n\u0022.join(lines).rstrip()\n\n    def column_rows(self) -\u003E List[Dict[str, object]]:\n        return [{\u0022Plik\u0022: t.name, \u0022Kolumna\u0022: c.name, \u0022Typ\u0022: c.type_name, \u0022Unikalne\u0022: c.distinct,\n                 \u0022Braki %\u0022: round(c.null_pct, 1), \u0022Przyk\u0142ad\u0022: c.example,\n                 \u0022Rola\u0022: \u0022klucz\u0022 if c.is_key else (\u0022\u2192 \u0022 \u002B c.references if c.references else \u0022\u0022)}\n                for t in self.tables for c in t.columns]\n\n    def pipeline_rows(self) -\u003E List[Dict[str, object]]:\n        return [{\u0022Krok\u0022: s.name, \u0022Co\u0022: s.detail, \u0022Czas [s]\u0022: round(s.seconds, 2)} for s in self.pipeline]\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "DataScan.md",
+        "nodeCathegory": 3,
+        "id": 58,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "DataScan",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "DataScan",
+        "targetPath": ""
+      },
+      "locationX": 600,
+      "locationY": 900
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass\n\nimport pandas as pd\n\nfrom DataScan import DataScan\n\n\n@dataclass\nclass OrderDataset:\n    \u0022\u0022\u0022Zam\u00F3wienia po\u0142\u0105czone z klientami i produktami (jedna tabela) oraz wynik Data Scan.\u0022\u0022\u0022\n\n    orders: pd.DataFrame\n    customers: pd.DataFrame\n    products: pd.DataFrame\n    scan: DataScan\n    demo: bool = False\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "OrderDataset.md",
+        "nodeCathegory": 3,
+        "id": 59,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "OrderDataset",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "OrderDataset",
+        "targetPath": ""
+      },
+      "locationX": 800,
+      "locationY": 900
+    },
+    {
+      "nodeData": {
+        "codeText": "from dataclasses import dataclass, field\nfrom typing import Dict, List, Optional\n\nimport pandas as pd\n\nfrom DataScan import DataScan\n\n\n@dataclass\nclass AnomalyReport:\n    \u0022\u0022\u0022Wynik przegl\u0105du zam\u00F3wie\u0144: ile przejrzano, co oznaczono i dlaczego, plus wzorce na poziomie klient\u00F3w.\u0022\u0022\u0022\n\n    total_orders: int\n    total_value: float\n    flagged: pd.DataFrame\n    rule_rows: List[Dict[str, object]] = field(default_factory=list)\n    similar_groups: List[List[str]] = field(default_factory=list)\n    similar_rows: List[Dict[str, object]] = field(default_factory=list)\n    behaviour_rows: List[Dict[str, object]] = field(default_factory=list)\n    rep_rows: List[Dict[str, object]] = field(default_factory=list)\n    scan: Optional[DataScan] = None\n    demo: bool = False\n    seconds: float = 0.0\n\n    @property\n    def flagged_count(self) -\u003E int:\n        return len(self.flagged)\n\n    @property\n    def flagged_value(self) -\u003E float:\n        return float(self.flagged[\u0022Warto\u015B\u0107\u0022].sum()) if len(self.flagged) else 0.0\n\n    @property\n    def customer_count(self) -\u003E int:\n        return sum(len(g) for g in self.similar_groups) \u002B len(self.behaviour_rows)\n",
+        "maxInputNumber": 0,
+        "maxOutputNumber": 0,
+        "documentationText": "",
+        "documentationFile": "AnomalyReport.md",
+        "nodeCathegory": 3,
+        "id": 60,
+        "settings": {
+          "objectifable": false,
+          "canBeMain": false,
+          "inputNumber": 0,
+          "outputNumber": 0,
+          "inputParametersEditorEnabled": false,
+          "outputParametersEditorEnabled": false,
+          "selectedInputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "inputConnectionSettings": [],
+          "selectedOutputConnectionSettings": {
+            "id": 0,
+            "title": "",
+            "connecttionType": 0
+          },
+          "outputConnectionSettings": [],
+          "description": "AnomalyReport",
+          "isMain": false,
+          "inObjectiveManner": false,
+          "shellType": "Local Shell (system Python)",
+          "sqlScriptType": "MSSQL",
+          "connectionString": "",
+          "inputConstructorRouting": {},
+          "setterMethodNames": {},
+          "outputInputDependencies": {},
+          "disabledInputs": [],
+          "aggregatePrevious": false,
+          "badgeText": "",
+          "badgeColor": "",
+          "fileFormat": "Python",
+          "reportDefinition": "",
+          "dataSchema": "",
+          "interactiveReport": "",
+          "nativeBuildTarget": "",
+          "runCompiled": false
+        },
+        "nodeCategory": 3,
+        "title": "AnomalyReport",
+        "targetPath": ""
+      },
+      "locationX": 1000,
+      "locationY": 900
+    }
+  ],
+  "connections": [
+    {
+      "sourceNodeId": 44,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 45,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 41,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 46,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 42,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 46,
+      "targetConnectorIndex": 1,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 45,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 46,
+      "targetConnectorIndex": 2,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 43,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 46,
+      "targetConnectorIndex": 3,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 44,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 47,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 44,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 48,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 46,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 49,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 47,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 49,
+      "targetConnectorIndex": 1,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 48,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 49,
+      "targetConnectorIndex": 2,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 50,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 51,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 49,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 52,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 51,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 52,
+      "targetConnectorIndex": 1,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 50,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 52,
+      "targetConnectorIndex": 2,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 52,
+      "sourceConnectorIndex": 1,
+      "targetNodeId": 53,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 41,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 53,
+      "targetConnectorIndex": 1,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 52,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 54,
+      "targetConnectorIndex": 0,
+      "isChosen": false
+    },
+    {
+      "sourceNodeId": 53,
+      "sourceConnectorIndex": 0,
+      "targetNodeId": 54,
+      "targetConnectorIndex": 1,
+      "isChosen": false
+    }
+  ],
+  "projectType": 0,
+  "preRunCommands": [],
+  "engineSettings": [
+    {
+      "name": "main_1",
+      "filePath": "C:\\Users\\Adam\\Documents\\CatNip Workspace\\PodejrzaneZamowienia\\main_1.py",
+      "isSelected": true,
+      "environmentId": "python:3.11-slim",
+      "runMode": "Code Run",
+      "timeoutSeconds": 600,
+      "memoryLimitMb": 2048,
+      "installMode": "Manual",
+      "manualPackages": "pandas numpy openpyxl",
+      "dockerImage": "python:3.11-slim",
+      "newDockerImageName": "",
+      "showImageParametersOnRun": false,
+      "runInstance": ""
+    }
+  ]
+}
