@@ -27,3 +27,20 @@ breakpoints.json
 
 # Half-written saves left by an interrupted write
 .*.tmp
+
+# Input data: the demo set (orders.csv ~60 MB) is generated on the first run (DemoOrderData, fixed seed),
+# and real company data put here must never reach the repository.
+/input/
+
+# Exported CSV lists of suspicious orders
+/output/
+
+# Local settings and secrets
+.env
+.env.*
+
+# IDE / OS clutter
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
