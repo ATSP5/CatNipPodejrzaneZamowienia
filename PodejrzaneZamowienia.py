@@ -16,8 +16,8 @@ class PodejrzaneZamowienia:
     TITLE = 'Które zamówienia są podejrzane?'
     HEIGHT = 1900
     KEEP_ALIVE = True
-    ACTIONS = {'eksport': 'live'}
-    CATNIP_LIVE_ACTIONS = ('eksport', )
+    ACTIONS = {'eksport': 'live', 'powerbi': 'live'}
+    CATNIP_LIVE_ACTIONS = ('eksport', 'powerbi', )
     MARKUP = (
         '<div class="cn-page">\n'
         '  <h1>Które zamówienia są podejrzane?</h1>\n'
@@ -36,6 +36,7 @@ class PodejrzaneZamowienia:
         '      <p class="headline">{headline}</p>\n'
         '      {findings_html}\n'
         '      {button("Zapisz listę do CSV", action="eksport")}\n'
+        '      {button("Eksportuj do Power BI", action="powerbi")}\n'
         '    </div>\n'
         '    <div class="cn-card">\n'
         '      <h3>Trafienia reguł</h3>\n'
@@ -105,6 +106,10 @@ class PodejrzaneZamowienia:
     def eksport(self):
         """Live action: the blocks wired to this output run again on every click. Zapisuje listę podejrzanych zamówień do output/ jako CSV dla Excela."""
         return _ir_wait(self, 'eksport')
+
+    def powerbi(self):
+        """Live action: the blocks wired to this output run again on every click. Zapisuje listę podejrzanych zamówień jako Parquet dla Power BI (output/powerbi/podejrzane_zamowienia.parquet)."""
+        return _ir_wait(self, 'powerbi')
 
     def set(self, name, value, refresh=False):
         """Sets a state value; the markup sees it by name. refresh=True renders the page again."""
@@ -189,6 +194,10 @@ class PodejrzaneZamowienia:
 
     def on_eksport(self, values):
         self.toast("Zapisuję %d zamówień do output/…" % self.findings.flagged_count, "info")
+        return self.findings
+
+    def on_powerbi(self, values):
+        self.toast("Eksportuję %d zamówień do Power BI (output/powerbi/)…" % self.findings.flagged_count, "info")
         return self.findings
 
     def _kpi(self, label, value, delta=None, change=0.0, good_up=True):

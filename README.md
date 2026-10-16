@@ -52,6 +52,8 @@ udziału we wszystkich zamówieniach.
 - Data Scan: rozpoznane tabele, typy kolumn, klucze, powiązania i czas każdego kroku pipeline'u.
 - Przycisk **„Zapisz listę do CSV”** — zapisuje listę do `output/podejrzane_zamowienia_<data>.csv`
   w formacie dla polskiego Excela (średnik, przecinek dziesiętny, UTF-8 z BOM).
+- Przycisk **„Eksportuj do Power BI”** — zapisuje tę samą listę do
+  `output/powerbi/podejrzane_zamowienia.parquet` (patrz [Power BI](#power-bi)).
 
 ## Dane demonstracyjne
 
@@ -76,7 +78,7 @@ nie trafią przypadkiem do repozytorium.
 ## Wymagania
 
 - **Python 3.9 lub nowszy**.
-- Pakiety z [`requirements.txt`](requirements.txt): `pandas`, `numpy`, `matplotlib`, `openpyxl`.
+- Pakiety z [`requirements.txt`](requirements.txt): `pandas`, `numpy`, `matplotlib`, `openpyxl`, `pyarrow`.
 - **CatNip** — do wyświetlenia interaktywnej strony z wynikami.
 
 Internet nie jest potrzebny.
@@ -115,6 +117,25 @@ Dane się wygenerują i przegląd policzy się w całości, ale interaktywną st
 obsługuje tylko Run Engine CatNip — poza nim zostanie wypisany jedynie komunikat, że strony nie ma
 gdzie pokazać.
 
+## Power BI
+
+Przycisk **„Eksportuj do Power BI”** na stronie raportu zapisuje listę podejrzanych zamówień do pliku Parquet
+`output/powerbi/podejrzane_zamowienia.parquet` (za każdym razem nadpisuje go najnowszymi danymi) i wypisuje
+w konsoli jego pełną ścieżkę. Kolumna `Data` jest prawdziwą datą, a `Wyeksportowano` mówi, z kiedy jest eksport.
+
+Podłączenie (raz):
+
+1. Uruchom przepływ w CatNip (Code Run) i kliknij **Eksportuj do Power BI**. W konsoli pojawi się
+   gotowe zapytanie Power Query ze ścieżką pliku na tym komputerze (także przy uruchomieniu w Dockerze).
+2. W Power BI Desktop: *Pobierz dane → Puste zapytanie → Edytor zaawansowany*, zastąp treść tym
+   zapytaniem (to samo jest w `output/powerbi/podejrzane_zamowienia.pq`) i kliknij *Gotowe*.
+
+Nie wklejaj ścieżki w *Pobierz dane → Parquet → Adres URL* — to pole przyjmuje tylko adres w sieci.
+
+Potem: kliknięcie przycisku w CatNip → **Odśwież** w Power BI. Usługa Power BI w chmurze nie widzi pliku
+na tym komputerze bez bramy danych — do automatycznego odświeżania zapisuj plik do folderu OneDrive/SharePoint
+(ustawienie `output_path` bloku `PowerBiExport`).
+
 ## Struktura projektu
 
 Przepływ danych (GitHub wyświetla go jako diagram):
@@ -139,6 +160,9 @@ flowchart LR
     P -- eksport --> W[FindingsCsvWriter]
     F --> W
     W --> M
+    P -- powerbi --> PT[FindingsPowerBiTable]
+    PT --> PB[PowerBiExport]
+    PB --> M
 ```
 
 ### Bloki, które wykonują pracę
@@ -156,8 +180,10 @@ flowchart LR
 | `AnomalyDetector` | Uruchamia reguły, mierzy czas kroków i zbiera listę do sprawdzenia. |
 | `PlnFormat` | Liczby i kwoty po polsku (spacja tysięcy, przecinek, zł / tys. zł / mln zł). |
 | `AnomalyNarrator` | Zamienia wynik w kilka zdań odpowiedzi. |
-| `PodejrzaneZamowienia` | Interaktywna strona raportu z akcją `eksport`. |
+| `PodejrzaneZamowienia` | Interaktywna strona raportu z akcjami `eksport` (CSV) i `powerbi` (Power BI). |
 | `FindingsCsvWriter` | Zapisuje listę podejrzanych zamówień do CSV po kliknięciu przycisku. |
+| `FindingsPowerBiTable` | Przygotowuje listę dla Power BI: data jako data, czas eksportu. |
+| `PowerBiExport` | Zapisuje ją jako Parquet dla Power BI (atomowo, z zapytaniem `.pq` obok). |
 | `Main` | Punkt wejścia; z niego CatNip generuje `main_1.py`. |
 
 ### Rekordy danych (`@dataclass`)
@@ -181,7 +207,7 @@ Każdy blok ma swoją szczegółową dokumentację w pliku `<NazwaBloku>.md`.
 | `*.py`, `*.md` | Kod i dokumentacja bloków; `main_1.py` — wygenerowany punkt wejścia. | tak |
 | `requirements.txt` | Zależności Pythona. | tak |
 | `input/` | Dane wejściowe — demonstracyjne (generowane) albo własne. | nie |
-| `output/` | Zapisane listy CSV. | nie |
+| `output/` | Zapisane listy CSV i plik dla Power BI (`output/powerbi/`). | nie |
 
 ## Konfiguracja
 

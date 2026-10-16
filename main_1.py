@@ -11,6 +11,8 @@ from OrderDataLoader import OrderDataLoader
 from AnomalyDetector import AnomalyDetector
 from PodejrzaneZamowienia import PodejrzaneZamowienia
 from FindingsCsvWriter import FindingsCsvWriter
+from FindingsPowerBiTable import FindingsPowerBiTable
+from PowerBiExport import PowerBiExport
 
 def main():
 	folders = ProjectFolders()
@@ -38,6 +40,12 @@ def main():
 	data_11 = findings.findings()
 	report = PodejrzaneZamowienia(data_11, data_9, data_5)
 	report.show()
+	def _on_report_powerbi(data_13):
+		data = FindingsPowerBiTable(data_13)
+		data_14 = data.table()
+		plik_power_bi = PowerBiExport(data_14)
+		plik_power_bi.path()
+	report.bind_action('powerbi', _on_report_powerbi)
 	def _on_report_eksport(data_12):
 		zapisany_csv = FindingsCsvWriter(data_12, data_1)
 		zapisany_csv.csv_path()
